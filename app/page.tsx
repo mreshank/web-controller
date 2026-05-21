@@ -1,48 +1,58 @@
 "use client";
 
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
-import { useRef } from "react";
-import { Mesh } from "three";
-import { useGamepad, GamepadState } from "@/hooks/useGamepad";
-
-function Cube() {
-  const meshRef = useRef<Mesh>(null);
-  const stateRef = useRef<GamepadState | null>(null);
-
-  // CRITICAL: store gamepad state in a ref, NOT useState.
-  // useState would re-render 60x/second and kill performance.
-  useGamepad((state) => {
-    stateRef.current = state;
-  });
-
-  // useFrame runs every render frame inside R3F's loop.
-  // Read the ref here and mutate the mesh directly.
-  useFrame((_, delta) => {
-    if (!meshRef.current || !stateRef.current) return;
-    const speed = 5;
-    meshRef.current.position.x += stateRef.current.leftStick.x * speed * delta;
-    meshRef.current.position.z += stateRef.current.leftStick.y * speed * delta;
-    meshRef.current.rotation.y += stateRef.current.rightStick.x * 2 * delta;
-  });
-
-  return (
-    <mesh ref={meshRef}>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color="orange" />
-    </mesh>
-  );
-}
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, Grid, ContactShadows } from "@react-three/drei";
+import { Cube } from "@/components/Cube";
+import { GamepadHUD } from "@/components/GamepadHUD";
+import { ConnectPrompt } from "@/components/ConnectPrompt";
 
 export default function Page() {
   return (
-    <div className="w-screen h-screen bg-slate-900">
-      <Canvas camera={{ position: [0, 3, 5] }}>
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[5, 5, 5]} intensity={1} />
+    <div className="relative h-screen w-screen overflow-hidden bg-slate-950">
+      <Canvas
+        shadows
+        camera={{ position: [0, 4, 7], fov: 50 }}
+        className="touch-none"
+      >
+        <color attach="background" args={["#0f172a"]} />
+        <ambientLight intensity={0.4} />
+        <directionalLight
+          position={[8, 12, 6]}
+          intensity={1.2}
+          castShadow
+          shadow-mapSize={[1024, 1024]}
+        />
+        <Grid
+          infiniteGrid
+          fadeDistance={25}
+          fadeStrength={1}
+          cellSize={0.5}
+          sectionSize={2}
+          sectionColor="#334155"
+          cellColor="#1e293b"
+        />
         <Cube />
-        <OrbitControls />
+        <ContactShadows
+          position={[0, -0.01, 0]}
+          opacity={0.4}
+          scale={12}
+          blur={2}
+        />
+        <OrbitControls
+          enablePan={false}
+          minDistance={4}
+          maxDistance={14}
+          maxPolarAngle={Math.PI / 2.1}
+        />
       </Canvas>
+
+      <GamepadHUD />
+      <ConnectPrompt />
+
+      <div className="pointer-events-none absolute bottom-4 right-4 z-10 max-w-xs text-right text-[10px] text-white/40">
+        Left stick · move · Right stick · rotate · Face buttons · color · L2/R2 ·
+        scale
+      </div>
     </div>
   );
 }
