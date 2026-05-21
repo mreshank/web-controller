@@ -5,4 +5,5 @@ export {
   useConnectedGamepadCount,
   useConnectedSlotIndexes,
   useGamepadStates,
+  useSubscriberCount,
 } from "@/context/GamepadProvider";

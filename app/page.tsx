@@ -1,15 +1,5 @@
-import { ConnectPrompt } from "@/components/ConnectPrompt";
-import { DemoScene } from "@/components/DemoScene";
-import { GamepadHUD } from "@/components/GamepadHUD";
-import { PresenterChrome } from "@/components/PresenterChrome";
+import { LiveDemo } from "@/components/LiveDemo";
 
 export default function Page() {
-  return (
-    <>
-      <DemoScene />
-      <GamepadHUD />
-      <ConnectPrompt />
-      <PresenterChrome />
-    </>
-  );
+  return <LiveDemo />;
 }

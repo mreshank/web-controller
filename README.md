@@ -24,6 +24,20 @@ Open [http://localhost:3000](http://localhost:3000). Plug in a controller (EVOFO
 
 Connect DualSense + EVOFOX. Press a button on **each**. Each device gets a browser **slot index** (not always 0 and 1) — the HUD shows which slots are active; each connected slot gets its own cube.
 
+## Presenter mode (on `/` and `/naive`)
+
+| Key | Action |
+|-----|--------|
+| **N** | Speaker notes (25-min outline + Q&A cheatsheet) |
+| **B** | Backup video (`/backup`) |
+| **F** | Fullscreen |
+| **H** | Hide presenter bar |
+| **?** | Shortcut help |
+
+## `/naive` — anti-pattern demo
+
+Cube + HUD each run their own `requestAnimationFrame` poll loop. HUD shows **Poll loops: 2**. Contrast with the main demo: **1 loop · N subscribers**.
+
 ## Stage backup
 
 1. Record a clean run (OBS / QuickTime).

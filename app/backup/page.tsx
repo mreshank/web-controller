@@ -1,10 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { KeyboardHelp } from "@/components/KeyboardHelp";
+import { usePresenterKeys } from "@/hooks/usePresenterKeys";
 
 export default function BackupPage() {
   const [missing, setMissing] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
+  const toggleHelp = useCallback(() => setHelpOpen((v) => !v), []);
+  usePresenterKeys({ onToggleHelp: toggleHelp });
 
   return (
     <div className="flex min-h-screen flex-col bg-black text-white">
@@ -46,6 +51,7 @@ export default function BackupPage() {
           />
         )}
       </main>
+      <KeyboardHelp open={helpOpen} onClose={() => setHelpOpen(false)} />
     </div>
   );
 }

@@ -24,6 +24,7 @@ type GamepadContextValue = {
   getSnapshot: () => GamepadState[];
   getConnectedCount: () => number;
   getConnectedSlotsKey: () => string;
+  getSubscriberCount: () => number;
 };
 
 const GamepadContext = createContext<GamepadContextValue | null>(null);
@@ -48,6 +49,7 @@ function createGamepadStore() {
   let connectedCount = 0;
   let connectedSlotsKey = "";
   const listeners = new Set<GamepadListener>();
+  let subscriberCount = 0;
   let rafId: number | null = null;
 
   const notify = () => {
@@ -91,12 +93,25 @@ function createGamepadStore() {
   return {
     subscribe(listener: GamepadListener) {
       listeners.add(listener);
+      const prev = subscriberCount;
+      subscriberCount = listeners.size;
+      if (prev !== subscriberCount) {
+        window.dispatchEvent(new CustomEvent("gamepad-subscribers-changed"));
+      }
       listener(states);
-      return () => listeners.delete(listener);
+      return () => {
+        listeners.delete(listener);
+        const before = subscriberCount;
+        subscriberCount = listeners.size;
+        if (before !== subscriberCount) {
+          window.dispatchEvent(new CustomEvent("gamepad-subscribers-changed"));
+        }
+      };
     },
     getSnapshot: () => states,
     getConnectedCount: () => connectedCount,
     getConnectedSlotsKey: () => connectedSlotsKey,
+    getSubscriberCount: () => subscriberCount,
     destroy() {
       stop();
       if (typeof window !== "undefined") {
@@ -120,6 +135,7 @@ const SSR_FALLBACK: GamepadContextValue = {
   getSnapshot: () => INITIAL_STATES,
   getConnectedCount: () => 0,
   getConnectedSlotsKey: () => "",
+  getSubscriberCount: () => 0,
 };
 
 function storeToContext(s: NonNullable<ReturnType<typeof getStore>>): GamepadContextValue {
@@ -128,7 +144,22 @@ function storeToContext(s: NonNullable<ReturnType<typeof getStore>>): GamepadCon
     getSnapshot: s.getSnapshot,
     getConnectedCount: s.getConnectedCount,
     getConnectedSlotsKey: s.getConnectedSlotsKey,
+    getSubscriberCount: s.getSubscriberCount,
   };
+}
+
+export function useSubscriberCount(): number {
+  const ctx = useGamepadContext();
+  return useSyncExternalStore(
+    (onStoreChange) => {
+      const handler = () => onStoreChange();
+      window.addEventListener("gamepad-subscribers-changed", handler);
+      return () =>
+        window.removeEventListener("gamepad-subscribers-changed", handler);
+    },
+    ctx.getSubscriberCount,
+    () => 0
+  );
 }
 
 export function GamepadProvider({ children }: { children: React.ReactNode }) {

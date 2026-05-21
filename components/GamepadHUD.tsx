@@ -5,6 +5,7 @@ import {
   useGamepad,
   useConnectedGamepadCount,
   useConnectedSlotIndexes,
+  useSubscriberCount,
 } from "@/hooks/useGamepad";
 
 const BUTTON_LABELS = ["×", "○", "□", "△"];
@@ -21,6 +22,7 @@ function formatButtons(buttons: boolean[]) {
 export function GamepadHUD() {
   const connectedCount = useConnectedGamepadCount();
   const connectedSlots = useConnectedSlotIndexes();
+  const subscriberCount = useSubscriberCount();
 
   const statusRef = useRef<HTMLSpanElement>(null);
   const countRef = useRef<HTMLSpanElement>(null);
@@ -33,10 +35,12 @@ export function GamepadHUD() {
   const r2Ref = useRef<HTMLSpanElement>(null);
   const btnRef = useRef<HTMLSpanElement>(null);
   const slotsRef = useRef<HTMLDivElement>(null);
+  const subsRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     if (countRef.current) countRef.current.textContent = String(connectedCount);
-  }, [connectedCount]);
+    if (subsRef.current) subsRef.current.textContent = String(subscriberCount);
+  }, [connectedCount, subscriberCount]);
 
   useEffect(() => {
     if (!slotsRef.current) return;
@@ -72,10 +76,10 @@ export function GamepadHUD() {
     <div className="absolute top-4 left-4 z-10 max-w-sm rounded-lg border border-white/10 bg-black/75 p-4 font-mono text-xs text-white shadow-xl backdrop-blur pointer-events-none">
       <div className="mb-2 flex items-center justify-between border-b border-white/10 pb-2">
         <span className="text-[10px] uppercase tracking-wider text-white/50">
-          Gamepad API · 1 poll loop
+          1 loop · <span ref={subsRef}>0</span> subscribers
         </span>
         <span className="text-[10px] text-white/40">
-          <span ref={countRef}>0</span> connected
+          <span ref={countRef}>0</span> pad{connectedCount === 1 ? "" : "s"}
         </span>
       </div>
       <div>
