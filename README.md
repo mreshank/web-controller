@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gamepad × 3D Web Demo
 
-## Getting Started
+Talk demo for **Breaking the DOM: Driving 3D Web Interfaces with Physical Gamepads** — HTML5 Gamepad API + React Three Fiber in Next.js.
 
-First, run the development server:
+## Run
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). Plug in a controller (EVOFOX USB or PS5 DualSense), **press any button** so the browser exposes the gamepad, then move sticks / face buttons / triggers.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Controls
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Input | Effect |
+|-------|--------|
+| Left stick | Move cube on XZ plane |
+| Right stick | Rotate |
+| Face buttons (× ○ □ △) | Color |
+| L2 / R2 | Scale |
 
-## Learn More
+## Two controllers
 
-To learn more about Next.js, take a look at the following resources:
+Connect DualSense + EVOFOX. Press a button on **each**. Each device gets a browser **slot index** (not always 0 and 1) — the HUD shows which slots are active; each connected slot gets its own cube.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Stage backup
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Record a clean run (OBS / QuickTime).
+2. Save as `public/backup-demo.mp4`.
+3. On stage if live demo fails: open `/backup` or press **B** from the main demo.
 
-## Deploy on Vercel
+## Architecture (talk beats)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Single poll loop** — `GamepadProvider` calls `navigator.getGamepads()` once per frame; Cube + HUD subscribe via refs (no 60fps React re-renders on the scene).
+- **Refs in `useFrame`** — gamepad state → mesh mutation, not `useState`.
+- **Slot index** — never hardcode `pads[0]`; browsers assign arbitrary indices.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Pack for May 23
+
+- Laptop + charger + HDMI adapter
+- PS5 controller + EVOFOX + USB-C cable
+- Backup video in `public/backup-demo.mp4`, tab on `/backup`

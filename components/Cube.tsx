@@ -3,9 +3,20 @@
 import { useFrame } from "@react-three/fiber";
 import { useRef, useMemo } from "react";
 import { Mesh, MeshStandardMaterial, Color } from "three";
-import { useGamepad, GamepadState } from "@/hooks/useGamepad";
+import { useGamepadSlot } from "@/hooks/useGamepad";
+import type { GamepadState } from "@/lib/gamepad";
 
-export function Cube() {
+type CubeProps = {
+  slotIndex: number;
+  position?: [number, number, number];
+  defaultHue?: string;
+};
+
+export function Cube({
+  slotIndex,
+  position = [0, 0.5, 0],
+  defaultHue = "#f97316",
+}: CubeProps) {
   const meshRef = useRef<Mesh>(null);
   const materialRef = useRef<MeshStandardMaterial>(null);
   const stateRef = useRef<GamepadState | null>(null);
@@ -19,9 +30,9 @@ export function Cube() {
     ],
     []
   );
-  const defaultColor = useMemo(() => new Color("#f97316"), []);
+  const defaultColor = useMemo(() => new Color(defaultHue), [defaultHue]);
 
-  useGamepad((state) => {
+  useGamepadSlot(slotIndex, (state) => {
     stateRef.current = state;
   });
 
@@ -54,9 +65,9 @@ export function Cube() {
   });
 
   return (
-    <mesh ref={meshRef} castShadow>
+    <mesh ref={meshRef} position={position} castShadow>
       <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial ref={materialRef} color="#f97316" />
+      <meshStandardMaterial ref={materialRef} color={defaultHue} />
     </mesh>
   );
 }
