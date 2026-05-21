@@ -1,85 +1,59 @@
-# Gamepad × 3D Web Demo
+# Gamepad × Web — Maximum Potential
 
-Talk demo for **Breaking the DOM: Driving 3D Web Interfaces with Physical Gamepads** — HTML5 Gamepad API + React Three Fiber in Next.js.
+Inspire a room with **Gamepad API + HTML5**: a talk demo, a multiplayer 3D game, a story world, and vanilla labs with almost no code.
 
-## Run
+## Quick start
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Plug in a controller (EVOFOX USB or PS5 DualSense), **press any button** so the browser exposes the gamepad, then move sticks / face buttons / triggers.
+Open [http://localhost:3000](http://localhost:3000) — the hub links to everything.
 
-## Controls
+`html5/` is synced to `public/html5/` on `dev` and `build` (edit files in **`html5/`** at repo root).
 
-| Input | Effect |
-|-------|--------|
-| Left stick | Move cube on XZ plane |
-| Right stick | Rotate |
-| Face buttons (× ○ □ △) | Color |
-| L2 / R2 | Scale |
+## Experiences
 
-## Two controllers
+| URL | Folder | What |
+|-----|--------|------|
+| `/` | `app/page.tsx` | Hub |
+| `/demo` | `demo/` | 25-min talk: R3F cube, HUD, presenter tools |
+| `/game` | `game/` | **Orb Rush** — up to 4 controllers, 3D arena, orbs |
+| `/story` | `story/` | Fly through narrative beacons in **your order** |
+| `/html5/…` | `html5/` | Vanilla demos (visualizer, canvas ship, CSS, Three CDN) |
 
-Connect DualSense + EVOFOX. Press a button on **each**. Each device gets a browser **slot index** (not always 0 and 1) — the HUD shows which slots are active; each connected slot gets its own cube.
+## Shared (root)
 
-## Stage hub
+- `lib/gamepad.ts` — parsing, slots, deadzone
+- `context/GamepadProvider.tsx` — single poll loop
+- `hooks/useGamepad.ts` — subscribers
+- `components/shared/SceneShell.tsx` — R3F canvas shell
 
-Open **[http://localhost:3000/stage](http://localhost:3000/stage)** before you present — links to every route + day-of checklist.
+Feature folders (`game/`, `story/`, `demo/`) only contain what that experience needs.
 
-## Rehearsal timer (`/rehearse`)
+## Presenter / talk
 
-Timed 25-minute walkthrough aligned to your outline:
+| URL | Purpose |
+|-----|---------|
+| `/stage` | Launcher + checklist |
+| `/rehearse` | Timed 25-min run-through |
+| `/code` | Source walkthrough tabs |
+| `/naive` | Dual poll-loop anti-pattern |
+| `/backup` | Pre-recorded fallback (`public/backup-demo.mp4`) |
 
-- Per-section countdown (turns red if you run over)
-- **Space** → next section · **P** → pause · **←/→** → jump
-- Quick links to `/`, `/naive`, `/code`, `/backup` per beat
-- Q&A cheatsheet on the final section
+Shortcuts on demo: **N** notes · **B** backup · **C** code · **S** stage · **R** rehearse · **F** fullscreen · **H** hide bar
 
-Run this twice before talk day.
+## Suggested talk ending
 
-## Presenter shortcuts (`/`, `/naive`, `/code`, `/backup`)
+1. Teach on `/demo` + `/code`  
+2. Show `/naive` → production pattern  
+3. **Finale:** `/game` with 2–4 controllers — let the audience play  
+4. Optional: `/story` or `/html5` if time remains  
 
-| Key | Action |
-|-----|--------|
-| **S** | Stage hub (`/stage`) |
-| **R** | Rehearsal timer (`/rehearse`) |
-| **C** | Code walkthrough (`/code`) |
-| **B** | Backup video (`/backup`) |
-| **N** | Speaker notes (25-min outline + Q&A) — live demo only |
-| **F** | Fullscreen |
-| **H** | Hide presenter bar |
-| **?** | Shortcut help |
+## Pack for stage
 
-## `/code` — code walkthrough
-
-Five tabs with **live source** from this repo (highlighted lines for the projector):
-
-1. Browser slot indices  
-2. Naive dual poll loops  
-3. `GamepadProvider` single loop  
-4. `Cube` refs + `useFrame`  
-5. HUD direct DOM updates  
-
-## `/naive` — anti-pattern demo
-
-Cube + HUD each run their own `requestAnimationFrame` poll loop. HUD shows **Poll loops: 2**. Contrast with the main demo: **1 loop · N subscribers**.
-
-## Stage backup
-
-1. Record a clean run (OBS / QuickTime).
-2. Save as `public/backup-demo.mp4`.
-3. On stage if live demo fails: open `/backup` or press **B** from the main demo.
-
-## Architecture (talk beats)
-
-- **Single poll loop** — `GamepadProvider` calls `navigator.getGamepads()` once per frame; Cube + HUD subscribe via refs (no 60fps React re-renders on the scene).
-- **Refs in `useFrame`** — gamepad state → mesh mutation, not `useState`.
-- **Slot index** — never hardcode `pads[0]`; browsers assign arbitrary indices.
-
-## Pack for May 23
-
-- Laptop + charger + HDMI adapter
-- PS5 controller + EVOFOX + USB-C cable
-- Backup video in `public/backup-demo.mp4`, tab on `/backup`
+- Laptop + HDMI + USB-C for PS5
+- Controllers charged, button press before each page
+- `public/backup-demo.mp4` (gitignored)
+- Bookmark `/stage` and `/game`

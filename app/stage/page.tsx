@@ -10,16 +10,37 @@ const STAGE_ROUTES = [
     keys: "Space next · P pause · ←/→ sections",
   },
   {
-    href: "/",
-    label: "Live demo",
+    href: "/game",
+    label: "Orb Rush (finale)",
+    color: "fuchsia",
+    desc: "4-player 3D arena — end the talk with this if you can.",
+    keys: "",
+  },
+  {
+    href: "/story",
+    label: "Story World",
+    color: "violet",
+    desc: "Fly through narrative beacons in any order.",
+    keys: "",
+  },
+  {
+    href: "/demo",
+    label: "Talk demo",
     color: "green",
-    desc: "Production path: 1 poll loop, multi-controller cubes, HUD.",
+    desc: "25-min technical demo: 1 poll loop, multi-slot HUD.",
     keys: "N notes · B backup · F fullscreen · H hide bar",
+  },
+  {
+    href: "/html5/index.html",
+    label: "HTML5 lab",
+    color: "amber",
+    desc: "Vanilla zero-build demos — max inspiration per line.",
+    keys: "",
   },
   {
     href: "/naive",
     label: "Naive demo",
-    color: "amber",
+    color: "slate",
     desc: "Anti-pattern: 2 RAF loops. Show before fixing.",
     keys: "",
   },
@@ -40,12 +61,16 @@ const STAGE_ROUTES = [
 ] as const;
 
 const colorClasses = {
+  fuchsia:
+    "border-fuchsia-500/40 bg-fuchsia-950/30 hover:border-fuchsia-400/60 hover:bg-fuchsia-950/50",
   violet:
     "border-violet-500/40 bg-violet-950/30 hover:border-violet-400/60 hover:bg-violet-950/50",
-  green:
-    "border-green-500/40 bg-green-950/30 hover:border-green-400/60 hover:bg-green-950/50",
   amber:
     "border-amber-500/40 bg-amber-950/30 hover:border-amber-400/60 hover:bg-amber-950/50",
+  green:
+    "border-green-500/40 bg-green-950/30 hover:border-green-400/60 hover:bg-green-950/50",
+  slate:
+    "border-slate-500/40 bg-slate-900/50 hover:border-slate-400/60 hover:bg-slate-800/50",
   cyan: "border-cyan-500/40 bg-cyan-950/30 hover:border-cyan-400/60 hover:bg-cyan-950/50",
   rose: "border-rose-500/40 bg-rose-950/30 hover:border-rose-400/60 hover:bg-rose-950/50",
 };
@@ -61,7 +86,7 @@ export default function StagePage() {
       </h1>
       <p className="mt-3 max-w-xl text-sm text-white/55">
         Open this page before you go on stage. Bookmark on your phone as a backup.
-        Suggested flow: Live demo → Naive (optional) → Code → back to Live → Q&A.
+        Suggested flow: Demo → Naive → Code → Game finale → Story (optional) → Q&A.
       </p>
 
       <ul className="mt-10 grid max-w-3xl gap-4 sm:grid-cols-2">

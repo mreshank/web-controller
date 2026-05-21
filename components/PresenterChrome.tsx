@@ -79,18 +79,26 @@ export function PresenterChrome({ variant = "live" }: PresenterChromeProps) {
         </div>
         <div className="flex flex-wrap justify-end gap-1.5 text-white/40">
           {variant === "live" ? (
-            <Link
-              href="/naive"
-              className="rounded border border-amber-500/30 bg-amber-950/40 px-2 py-0.5 text-amber-200/80 hover:border-amber-400/50"
-            >
-              Naive demo →
-            </Link>
+            <>
+              <Link
+                href="/game"
+                className="rounded border border-fuchsia-500/30 bg-fuchsia-950/40 px-2 py-0.5 text-fuchsia-200/80 hover:border-fuchsia-400/50"
+              >
+                Game →
+              </Link>
+              <Link
+                href="/naive"
+                className="rounded border border-amber-500/30 bg-amber-950/40 px-2 py-0.5 text-amber-200/80 hover:border-amber-400/50"
+              >
+                Naive →
+              </Link>
+            </>
           ) : (
             <Link
-              href="/"
+              href="/demo"
               className="rounded border border-green-500/30 bg-green-950/40 px-2 py-0.5 text-green-200/80 hover:border-green-400/50"
             >
-              ← Production demo
+              ← Talk demo
             </Link>
           )}
           <span className="px-1 py-0.5">F fullscreen · H hide</span>

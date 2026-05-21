@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HTML5 × Gamepad — Zero Build</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <p class="badge">No React · No npm · Pure web</p>
+      <h1>HTML5 + Gamepad API</h1>
+      <p>
+        Maximum inspiration per line of code. Open any demo, plug a controller,
+        press a button — then show your audience what the browser already ships.
+      </p>
+      <p id="status">Waiting for controller…</p>
+
+      <a class="card" href="visualizer.html">
+        <strong>Pad Visualizer</strong>
+        <span>See every axis and button live — the hello-world of hardware on the web.</span>
+      </a>
+      <a class="card" href="canvas-ship.html">
+        <strong>Canvas Starship</strong>
+        <span>One canvas, one loop, twin-stick flight. ~80 lines of JS.</span>
+      </a>
+      <a class="card" href="css-driver.html">
+        <strong>CSS Driver</strong>
+        <span>Move DOM with sticks — no WebGL required for impact.</span>
+      </a>
+      <a class="card" href="three-min.html">
+        <strong>Three.js (CDN)</strong>
+        <span>3D cube from a script tag + gamepad. Same API as your talk.</span>
+      </a>
+
+      <p style="margin-top: 2rem; font-size: 0.75rem; color: rgba(255, 255, 255, 0.4)">
+        <a href="/">← Next.js experiences</a> (demo, game, story)
+      </p>
+    </div>
+    <script src="gamepad.js"></script>
+    <script>
+      GamepadHTML5.poll((s) => {
+        const el = document.getElementById("status");
+        el.textContent = s.connected
+          ? "Connected: " + s.id
+          : "Plug in controller & press any button";
+        el.style.color = s.connected ? "#4ade80" : "#fbbf24";
+      });
+    </script>
+  </body>
+</html>

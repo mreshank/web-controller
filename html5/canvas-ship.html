@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Canvas Starship</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <p><a href="index.html">← HTML5 hub</a></p>
+      <h1>Twin-stick canvas ship</h1>
+      <p id="status">Press any button on your controller</p>
+      <canvas id="c" width="900" height="500"></canvas>
+    </div>
+    <script src="gamepad.js"></script>
+    <script>
+      const canvas = document.getElementById("c");
+      const ctx = canvas.getContext("2d");
+      const ship = { x: 450, y: 250, a: 0, trail: [] };
+      const stars = Array.from({ length: 120 }, () => ({
+        x: Math.random() * 900,
+        y: Math.random() * 500,
+        z: Math.random(),
+      }));
+
+      function draw() {
+        ctx.fillStyle = "#030712";
+        ctx.fillRect(0, 0, 900, 500);
+        stars.forEach((s) => {
+          ctx.fillStyle = `rgba(255,255,255,${0.2 + s.z * 0.6})`;
+          ctx.fillRect(s.x, s.y, 1 + s.z * 2, 1 + s.z * 2);
+        });
+        ship.trail.forEach((t, i) => {
+          ctx.globalAlpha = i / ship.trail.length;
+          ctx.fillStyle = "#38bdf8";
+          ctx.beginPath();
+          ctx.arc(t.x, t.y, 2, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        ctx.globalAlpha = 1;
+        ctx.save();
+        ctx.translate(ship.x, ship.y);
+        ctx.rotate(ship.a);
+        ctx.fillStyle = "#f97316";
+        ctx.beginPath();
+        ctx.moveTo(0, -14);
+        ctx.lineTo(10, 12);
+        ctx.lineTo(0, 8);
+        ctx.lineTo(-10, 12);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+
+      GamepadHTML5.poll((s) => {
+        document.getElementById("status").textContent = s.connected
+          ? s.id
+          : "Connect controller";
+        if (!s.connected) {
+          draw();
+          return;
+        }
+        ship.a += s.rx * 0.06;
+        const sp = 4 + (s.buttons[7] ? 6 : 0);
+        ship.x += Math.sin(ship.a) * -s.ly * sp;
+        ship.y += Math.cos(ship.a) * -s.ly * sp;
+        ship.x += Math.cos(ship.a) * s.lx * sp;
+        ship.y += Math.sin(ship.a) * -s.lx * sp;
+        ship.x = Math.max(20, Math.min(880, ship.x));
+        ship.y = Math.max(20, Math.min(480, ship.y));
+        ship.trail.push({ x: ship.x, y: ship.y });
+        if (ship.trail.length > 40) ship.trail.shift();
+        draw();
+      });
+    </script>
+  </body>
+</html>

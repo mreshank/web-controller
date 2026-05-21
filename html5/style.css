@@ -1,0 +1,66 @@
+:root {
+  color-scheme: dark;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: #030712;
+  color: #e2e8f0;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+a {
+  color: #38bdf8;
+}
+.wrap {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem;
+}
+.card {
+  display: block;
+  margin: 0.75rem 0;
+  padding: 1rem 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.35);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s;
+}
+.card:hover {
+  border-color: rgba(56, 189, 248, 0.5);
+}
+.card strong {
+  display: block;
+  font-size: 1rem;
+  color: #fff;
+}
+.card span {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+.badge {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  background: rgba(56, 189, 248, 0.15);
+  color: #7dd3fc;
+}
+canvas {
+  display: block;
+  width: 100%;
+  max-width: 900px;
+  margin: 1rem auto;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #0f172a;
+}
+#status {
+  font-size: 0.75rem;
+  color: #fbbf24;
+}

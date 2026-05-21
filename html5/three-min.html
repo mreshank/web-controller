@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Three.js + Gamepad (CDN)</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      #box {
+        width: 100%;
+        max-width: 900px;
+        height: 480px;
+        margin: 1rem auto;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <p><a href="index.html">← HTML5 hub</a></p>
+      <h1>Three.js from CDN</h1>
+      <p>Same Gamepad API your Next.js demo uses — zero bundler.</p>
+      <div id="box"></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="gamepad.js"></script>
+    <script>
+      const el = document.getElementById("box");
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x030712);
+      const camera = new THREE.PerspectiveCamera(50, 900 / 480, 0.1, 100);
+      camera.position.set(0, 3, 6);
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(900, 480);
+      el.appendChild(renderer.domElement);
+      const light = new THREE.DirectionalLight(0xffffff, 1.2);
+      light.position.set(5, 8, 5);
+      scene.add(light);
+      scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+      const mesh = new THREE.Mesh(
+        new THREE.BoxGeometry(1, 1, 1),
+        new THREE.MeshStandardMaterial({ color: 0xf97316, emissive: 0xf97316, emissiveIntensity: 0.3 })
+      );
+      scene.add(mesh);
+      const pad = { lx: 0, ly: 0, rx: 0 };
+      GamepadHTML5.poll((s) => {
+        if (s.connected) {
+          pad.lx = s.lx;
+          pad.ly = s.ly;
+          pad.rx = s.rx;
+          if (s.buttons[0]) mesh.material.color.setHex(0x38bdf8);
+          else mesh.material.color.setHex(0xf97316);
+        }
+      });
+      function animate() {
+        requestAnimationFrame(animate);
+        mesh.position.x += pad.lx * 0.08;
+        mesh.position.z += pad.ly * 0.08;
+        mesh.rotation.y += pad.rx * 0.04;
+        renderer.render(scene, camera);
+      }
+      animate();
+    </script>
+  </body>
+</html>

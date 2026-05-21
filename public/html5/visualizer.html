@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gamepad Visualizer</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 0.75rem;
+        margin-top: 1rem;
+      }
+      .meter {
+        height: 6px;
+        background: #1e293b;
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .meter i {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg, #38bdf8, #a78bfa);
+        width: 50%;
+        transform-origin: left;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <p><a href="index.html">← HTML5 hub</a></p>
+      <h1>Live pad visualizer</h1>
+      <div class="grid" id="axes"></div>
+      <pre id="btns" style="font-size: 0.7rem; color: #94a3b8"></pre>
+    </div>
+    <script src="gamepad.js"></script>
+    <script>
+      const axesEl = document.getElementById("axes");
+      const labels = ["LX", "LY", "RX", "RY"];
+      labels.forEach((l) => {
+        const d = document.createElement("div");
+        d.innerHTML = `<div>${l}</div><div class="meter"><i id="m-${l}"></i></div>`;
+        axesEl.appendChild(d);
+      });
+      GamepadHTML5.poll((s) => {
+        if (!s.connected) return;
+        ["LX", "LY", "RX", "RY"].forEach((l, i) => {
+          const v = [s.lx, s.ly, s.rx, s.ry][i];
+          const bar = document.getElementById("m-" + l);
+          bar.style.transform = `scaleX(${Math.abs(v)})`;
+          bar.style.marginLeft = v < 0 ? (1 - Math.abs(v)) * 100 + "%" : "50%";
+        });
+        document.getElementById("btns").textContent =
+          "Buttons: " +
+          s.buttons.map((b, i) => (b ? i : null)).filter((x) => x !== null).join(", ");
+      });
+    </script>
+  </body>
+</html>

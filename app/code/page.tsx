@@ -18,10 +18,10 @@ export default function CodePage() {
         </div>
         <div className="flex flex-wrap gap-2 text-xs">
           <Link
-            href="/"
+            href="/demo"
             className="rounded border border-green-500/30 bg-green-950/40 px-3 py-1 text-green-200/90 hover:border-green-400/50"
           >
-            Live demo
+            Talk demo
           </Link>
           <Link
             href="/naive"

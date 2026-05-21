@@ -128,8 +128,11 @@ export function RehearsalMode() {
           <Link href="/stage" className="rounded border border-white/15 px-3 py-1 hover:bg-white/10">
             Stage hub
           </Link>
-          <Link href="/" className="rounded border border-green-500/30 bg-green-950/40 px-3 py-1 text-green-200/90">
-            Live demo
+          <Link href="/game" className="rounded border border-fuchsia-500/30 bg-fuchsia-950/40 px-3 py-1 text-fuchsia-200/90">
+            Game finale
+          </Link>
+          <Link href="/demo" className="rounded border border-green-500/30 bg-green-950/40 px-3 py-1 text-green-200/90">
+            Talk demo
           </Link>
         </div>
       </header>

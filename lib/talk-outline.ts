@@ -17,7 +17,7 @@ export const TALK_SECTIONS: readonly TalkSection[] = [
   {
     time: "0:00–2:00",
     title: "Hook",
-    links: [{ label: "Live demo", href: "/" }],
+    links: [{ label: "Live demo", href: "/demo" }],
     bullets: [
       "Plug in controller on stage — move cube before explaining",
       "Let the room react",
@@ -26,7 +26,7 @@ export const TALK_SECTIONS: readonly TalkSection[] = [
   {
     time: "2:00–5:00",
     title: "Why this matters",
-    links: [{ label: "Live demo", href: "/" }],
+    links: [{ label: "Live demo", href: "/demo" }],
     bullets: [
       "Browser as runtime beyond forms and 2D",
       "Cloud gaming UIs, accessibility, installations",
@@ -37,7 +37,7 @@ export const TALK_SECTIONS: readonly TalkSection[] = [
     title: "Gamepad API",
     links: [
       { label: "Naive (2 loops)", href: "/naive" },
-      { label: "Live demo", href: "/" },
+      { label: "Live demo", href: "/demo" },
     ],
     codeTabs: ["slots"],
     bullets: [
@@ -63,9 +63,13 @@ export const TALK_SECTIONS: readonly TalkSection[] = [
   {
     time: "18:00–22:00",
     title: "Bigger demo",
-    links: [{ label: "Live demo", href: "/" }],
+    links: [
+      { label: "Orb Rush game", href: "/game" },
+      { label: "Talk demo", href: "/demo" },
+    ],
     bullets: [
-      "Face buttons → color, triggers → scale",
+      "Finale: /game — up to 4 players collect orbs in 3D",
+      "Face buttons → color, triggers → scale on /demo",
       "Two controllers → two cubes (if both connected)",
     ],
   },
