@@ -56,6 +56,14 @@ export function usePresenterKeys({
         case "?":
           onToggleHelp?.();
           break;
+        case "c":
+        case "C":
+          router.push("/code");
+          break;
+        case "s":
+        case "S":
+          router.push("/stage");
+          break;
         default:
           break;
       }

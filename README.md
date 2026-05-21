@@ -24,15 +24,31 @@ Open [http://localhost:3000](http://localhost:3000). Plug in a controller (EVOFO
 
 Connect DualSense + EVOFOX. Press a button on **each**. Each device gets a browser **slot index** (not always 0 and 1) — the HUD shows which slots are active; each connected slot gets its own cube.
 
-## Presenter mode (on `/` and `/naive`)
+## Stage hub
+
+Open **[http://localhost:3000/stage](http://localhost:3000/stage)** before you present — links to every route + day-of checklist.
+
+## Presenter shortcuts (`/`, `/naive`, `/code`, `/backup`)
 
 | Key | Action |
 |-----|--------|
-| **N** | Speaker notes (25-min outline + Q&A cheatsheet) |
+| **S** | Stage hub (`/stage`) |
+| **C** | Code walkthrough (`/code`) |
 | **B** | Backup video (`/backup`) |
+| **N** | Speaker notes (25-min outline + Q&A) — live demo only |
 | **F** | Fullscreen |
 | **H** | Hide presenter bar |
 | **?** | Shortcut help |
+
+## `/code` — code walkthrough
+
+Five tabs with **live source** from this repo (highlighted lines for the projector):
+
+1. Browser slot indices  
+2. Naive dual poll loops  
+3. `GamepadProvider` single loop  
+4. `Cube` refs + `useFrame`  
+5. HUD direct DOM updates  
 
 ## `/naive` — anti-pattern demo
 

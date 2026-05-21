@@ -36,6 +36,7 @@ export const TALK_SECTIONS = [
       "Refs + useFrame mutate mesh directly",
       "HUD uses DOM refs, not React state",
       "Production: one GamepadProvider, many subscribers",
+      "Open /code — tab: naive → provider → cube → HUD",
     ],
   },
   {
@@ -82,6 +83,8 @@ export const QA_CHEATSHEET = [
 
 export const PRESENTER_SHORTCUTS = [
   { key: "B", action: "Open backup video (/backup)" },
+  { key: "C", action: "Code walkthrough (/code)" },
+  { key: "S", action: "Stage hub (/stage)" },
   { key: "N", action: "Toggle speaker notes" },
   { key: "F", action: "Toggle fullscreen" },
   { key: "H", action: "Hide presenter bar" },
