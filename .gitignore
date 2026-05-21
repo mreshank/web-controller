@@ -41,3 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 chats
+
+# large local backup recording (keep public/backup-demo.mp4 on your laptop only)
+public/backup-demo.mp4

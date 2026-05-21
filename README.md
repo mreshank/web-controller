@@ -28,11 +28,23 @@ Connect DualSense + EVOFOX. Press a button on **each**. Each device gets a brows
 
 Open **[http://localhost:3000/stage](http://localhost:3000/stage)** before you present — links to every route + day-of checklist.
 
+## Rehearsal timer (`/rehearse`)
+
+Timed 25-minute walkthrough aligned to your outline:
+
+- Per-section countdown (turns red if you run over)
+- **Space** → next section · **P** → pause · **←/→** → jump
+- Quick links to `/`, `/naive`, `/code`, `/backup` per beat
+- Q&A cheatsheet on the final section
+
+Run this twice before talk day.
+
 ## Presenter shortcuts (`/`, `/naive`, `/code`, `/backup`)
 
 | Key | Action |
 |-----|--------|
 | **S** | Stage hub (`/stage`) |
+| **R** | Rehearsal timer (`/rehearse`) |
 | **C** | Code walkthrough (`/code`) |
 | **B** | Backup video (`/backup`) |
 | **N** | Speaker notes (25-min outline + Q&A) — live demo only |

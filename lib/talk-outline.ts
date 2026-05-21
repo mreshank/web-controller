@@ -1,10 +1,23 @@
 export const TALK_TITLE =
   "Breaking the DOM: Driving 3D Web Interfaces with Physical Gamepads";
 
-export const TALK_SECTIONS = [
+export const TALK_TOTAL_MINUTES = 25;
+
+export type TalkSection = {
+  time: string;
+  title: string;
+  bullets: readonly string[];
+  /** Suggested routes to open during this beat */
+  links?: readonly { label: string; href: string }[];
+  /** Code walkthrough tab id (see /code) */
+  codeTabs?: readonly string[];
+};
+
+export const TALK_SECTIONS: readonly TalkSection[] = [
   {
     time: "0:00–2:00",
     title: "Hook",
+    links: [{ label: "Live demo", href: "/" }],
     bullets: [
       "Plug in controller on stage — move cube before explaining",
       "Let the room react",
@@ -13,6 +26,7 @@ export const TALK_SECTIONS = [
   {
     time: "2:00–5:00",
     title: "Why this matters",
+    links: [{ label: "Live demo", href: "/" }],
     bullets: [
       "Browser as runtime beyond forms and 2D",
       "Cloud gaming UIs, accessibility, installations",
@@ -21,6 +35,11 @@ export const TALK_SECTIONS = [
   {
     time: "5:00–12:00",
     title: "Gamepad API",
+    links: [
+      { label: "Naive (2 loops)", href: "/naive" },
+      { label: "Live demo", href: "/" },
+    ],
+    codeTabs: ["slots"],
     bullets: [
       "Polling vs events — no push, only requestAnimationFrame",
       "Press a button after load (browser security)",
@@ -31,6 +50,8 @@ export const TALK_SECTIONS = [
   {
     time: "12:00–18:00",
     title: "React + 60fps (the aha)",
+    links: [{ label: "Code walkthrough", href: "/code" }],
+    codeTabs: ["naive", "provider", "cube", "hud"],
     bullets: [
       "useState at 60fps = re-render hell",
       "Refs + useFrame mutate mesh directly",
@@ -42,6 +63,7 @@ export const TALK_SECTIONS = [
   {
     time: "18:00–22:00",
     title: "Bigger demo",
+    links: [{ label: "Live demo", href: "/" }],
     bullets: [
       "Face buttons → color, triggers → scale",
       "Two controllers → two cubes (if both connected)",
@@ -50,13 +72,31 @@ export const TALK_SECTIONS = [
   {
     time: "22:00–25:00",
     title: "Wrap + Q&A",
+    links: [{ label: "Backup video", href: "/backup" }],
     bullets: [
       "WebHID, Web MIDI as cousins",
       "If demo dies: press B → /backup video",
       "“I haven't dug into that — what's your take?”",
     ],
   },
-] as const;
+];
+
+/** Parse "0:00–2:00" → duration in seconds for rehearsal timer */
+export function sectionDurationSeconds(time: string): number {
+  const parts = time.split(/[–-]/).map((s) => s.trim());
+  if (parts.length !== 2) return 180;
+  const toSec = (t: string) => {
+    const [min, sec] = t.split(":").map(Number);
+    return (min ?? 0) * 60 + (sec ?? 0);
+  };
+  return Math.max(60, toSec(parts[1]!) - toSec(parts[0]!));
+}
+
+export function formatClock(totalSeconds: number): string {
+  const m = Math.floor(totalSeconds / 60);
+  const s = totalSeconds % 60;
+  return `${m}:${s.toString().padStart(2, "0")}`;
+}
 
 export const QA_CHEATSHEET = [
   {
@@ -85,6 +125,7 @@ export const PRESENTER_SHORTCUTS = [
   { key: "B", action: "Open backup video (/backup)" },
   { key: "C", action: "Code walkthrough (/code)" },
   { key: "S", action: "Stage hub (/stage)" },
+  { key: "R", action: "Rehearsal timer (/rehearse)" },
   { key: "N", action: "Toggle speaker notes" },
   { key: "F", action: "Toggle fullscreen" },
   { key: "H", action: "Hide presenter bar" },

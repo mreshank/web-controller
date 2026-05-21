@@ -3,6 +3,13 @@ import { TALK_TITLE } from "@/lib/talk-outline";
 
 const STAGE_ROUTES = [
   {
+    href: "/rehearse",
+    label: "Rehearsal timer",
+    color: "violet",
+    desc: "25-min timed run-through with section links and Q&A cheatsheet.",
+    keys: "Space next · P pause · ←/→ sections",
+  },
+  {
     href: "/",
     label: "Live demo",
     color: "green",
@@ -33,6 +40,8 @@ const STAGE_ROUTES = [
 ] as const;
 
 const colorClasses = {
+  violet:
+    "border-violet-500/40 bg-violet-950/30 hover:border-violet-400/60 hover:bg-violet-950/50",
   green:
     "border-green-500/40 bg-green-950/30 hover:border-green-400/60 hover:bg-green-950/50",
   amber:

@@ -64,6 +64,12 @@ export function usePresenterKeys({
         case "S":
           router.push("/stage");
           break;
+        case "r":
+        case "R":
+          if (window.location.pathname !== "/rehearse") {
+            router.push("/rehearse");
+          }
+          break;
         default:
           break;
       }

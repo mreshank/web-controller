@@ -26,7 +26,10 @@ type SnippetConfig = {
 };
 
 function buildSnippet(config: SnippetConfig): TalkCodeSnippet {
-  const source = readFileSync(join(process.cwd(), config.path), "utf8");
+  const source = readFileSync(
+    join(/* turbopackIgnore: true */ process.cwd(), config.path),
+    "utf8"
+  );
   const all = source.split("\n");
   const highlightSet = new Set(config.highlightLines);
   const lines: CodeLine[] = [];

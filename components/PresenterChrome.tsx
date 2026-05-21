@@ -39,6 +39,12 @@ export function PresenterChrome({ variant = "live" }: PresenterChromeProps) {
       <div className="absolute top-4 right-4 z-10 flex flex-col items-end gap-1.5 text-[10px]">
         <div className="flex flex-wrap justify-end gap-1.5">
           <Link
+            href="/rehearse"
+            className="rounded border border-violet-500/30 bg-violet-950/40 px-2 py-1 text-violet-100/90 backdrop-blur transition hover:border-violet-400/50"
+          >
+            Rehearse (R)
+          </Link>
+          <Link
             href="/stage"
             className="rounded border border-white/10 bg-black/60 px-2 py-1 text-white/70 backdrop-blur transition hover:border-white/25 hover:text-white"
           >
