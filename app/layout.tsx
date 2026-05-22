@@ -1,20 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { getGamepadStylesheetHref, GP_FONT_URL } from "@/lib/stylesheet";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
-  title: "Gamepad × 3D Web Demo",
-  description: "HTML5 Gamepad API + React Three Fiber — Doon Tech Community talk demo",
+  title: "Gamepad Runtime — Browser as Game Engine",
+  description:
+    "HTML5 Gamepad API experiences: 3D arena, story world, talk demo, vanilla labs",
 };
 
 export default function RootLayout({
@@ -22,12 +13,21 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const stylesheetHref = getGamepadStylesheetHref();
+
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="flex min-h-full flex-col">{children}</body>
+    <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link href={GP_FONT_URL} rel="stylesheet" />
+        <link rel="stylesheet" href={stylesheetHref} />
+      </head>
+      <body className="gp-root">{children}</body>
     </html>
   );
 }

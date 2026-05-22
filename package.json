@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "node scripts/sync-html5.mjs",
+    "predev": "node scripts/sync-assets.mjs",
     "dev": "next dev",
-    "prebuild": "node scripts/sync-html5.mjs",
+    "prebuild": "node scripts/sync-assets.mjs",
+    "sync:styles": "node scripts/sync-assets.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"

@@ -25,7 +25,6 @@ export function RehearsalMode() {
   const [running, setRunning] = useState(false);
   const [startedAt, setStartedAt] = useState<number | null>(null);
   const [sectionStartedAt, setSectionStartedAt] = useState<number | null>(null);
-  const [showQa, setShowQa] = useState(false);
 
   useTick(running);
 
@@ -58,7 +57,6 @@ export function RehearsalMode() {
     setStartedAt(null);
     setSectionStartedAt(null);
     setIndex(0);
-    setShowQa(false);
   }, []);
 
   const go = useCallback(
@@ -66,7 +64,6 @@ export function RehearsalMode() {
       const clamped = Math.max(0, Math.min(TALK_SECTIONS.length - 1, next));
       setIndex(clamped);
       if (running) setSectionStartedAt(Date.now());
-      setShowQa(clamped === TALK_SECTIONS.length - 1);
     },
     [running]
   );
@@ -116,175 +113,152 @@ export function RehearsalMode() {
   );
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-950 text-white">
-      <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-white/10 px-4 py-3 sm:px-6">
+    <div className="gp-page">
+      <header className="gp-page-header gp-container">
         <div>
-          <p className="text-[10px] uppercase tracking-wider text-white/40">
-            Rehearsal · 25 min run-through
-          </p>
-          <h1 className="text-sm font-medium sm:text-base">{TALK_TITLE}</h1>
+          <p className="gp-eyebrow">Rehearsal</p>
+          <h1 className="gp-heading">{TALK_TITLE}</h1>
         </div>
-        <div className="flex flex-wrap gap-2 text-xs">
-          <Link href="/stage" className="rounded border border-white/15 px-3 py-1 hover:bg-white/10">
-            Stage hub
+        <div className="gp-page-header__actions">
+          <Link href="/game" className="gp-btn gp-btn--game">
+            Game
           </Link>
-          <Link href="/game" className="rounded border border-fuchsia-500/30 bg-fuchsia-950/40 px-3 py-1 text-fuchsia-200/90">
-            Game finale
+          <Link href="/demo" className="gp-btn gp-btn--accent">
+            Demo
           </Link>
-          <Link href="/demo" className="rounded border border-green-500/30 bg-green-950/40 px-3 py-1 text-green-200/90">
-            Talk demo
+          <Link href="/stage" className="gp-btn">
+            Stage
           </Link>
         </div>
       </header>
 
-      <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
-        <aside className="shrink-0 border-b border-white/10 p-4 lg:w-56 lg:border-b-0 lg:border-r">
-          <p className="text-[10px] uppercase text-white/40">Sections</p>
-          <ol className="mt-2 space-y-1">
-            {TALK_SECTIONS.map((s, i) => (
-              <li key={s.title}>
-                <button
-                  type="button"
-                  onClick={() => go(i)}
-                  className={`w-full rounded-lg px-2 py-1.5 text-left text-xs transition ${
-                    i === index
-                      ? "bg-cyan-950/60 text-cyan-100"
-                      : "text-white/50 hover:bg-white/5 hover:text-white/80"
-                  }`}
-                >
-                  <span className="font-mono text-[10px] text-white/35">{s.time}</span>
-                  <span className="mt-0.5 block">{s.title}</span>
-                </button>
-              </li>
-            ))}
-          </ol>
-        </aside>
+      <div className="gp-container gp-rehearse">
+        <nav className="gp-rehearse__nav">
+          {TALK_SECTIONS.map((s, i) => (
+            <button
+              key={s.title}
+              type="button"
+              className={`gp-rehearse__nav-btn${i === index ? " is-active" : ""}`}
+              onClick={() => go(i)}
+            >
+              <span className="gp-mono" style={{ display: "block", fontSize: "0.58rem", color: "var(--gp-text-faint)" }}>
+                {s.time}
+              </span>
+              {s.title}
+            </button>
+          ))}
+        </nav>
 
-        <main className="flex min-h-0 flex-1 flex-col p-4 sm:p-6">
-          <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="gp-rehearse__main">
+          <div className="gp-row" style={{ justifyContent: "space-between", flexWrap: "wrap", gap: "1rem" }}>
             <div>
-              <p className="font-mono text-xs text-cyan-400/90">{section.time}</p>
-              <h2 className="mt-1 text-2xl font-semibold sm:text-3xl">{section.title}</h2>
+              <p className="gp-mono" style={{ fontSize: "0.68rem", color: "var(--gp-accent)" }}>
+                {section.time}
+              </p>
+              <h2 className="gp-display" style={{ fontSize: "1.75rem", marginTop: "0.25rem" }}>
+                {section.title}
+              </h2>
             </div>
-            <div className="flex gap-6 font-mono text-sm">
-              <div className={sectionOver ? "text-rose-400" : "text-white/80"}>
-                <span className="text-[10px] uppercase text-white/40">Section</span>
-                <p className="text-lg tabular-nums">
+            <div className="gp-row" style={{ gap: "1.25rem" }}>
+              <div>
+                <p className="gp-section-label">Section</p>
+                <p className={`gp-timer${sectionOver ? " gp-timer--over" : ""}`}>
                   {formatClock(sectionElapsed)} / {formatClock(sectionBudget)}
                 </p>
               </div>
-              <div className={totalOver ? "text-rose-400" : "text-white/60"}>
-                <span className="text-[10px] uppercase text-white/40">Total</span>
-                <p className="text-lg tabular-nums">
+              <div>
+                <p className="gp-section-label">Total</p>
+                <p className={`gp-timer${totalOver ? " gp-timer--over" : ""}`}>
                   {formatClock(totalElapsed)} / {formatClock(totalBudget)}
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
+          <div className="gp-progress">
             <div
-              className={`h-full transition-all ${sectionOver ? "bg-rose-500" : "bg-cyan-500"}`}
+              className={`gp-progress__fill${sectionOver ? " gp-progress__fill--over" : ""}`}
               style={{ width: `${sectionProgress}%` }}
             />
           </div>
 
-          <ul className="mt-6 flex-1 space-y-2 text-sm text-white/75">
+          <ul className="gp-drawer__list" style={{ marginTop: "1.25rem", flex: 1 }}>
             {section.bullets.map((b) => (
-              <li key={b} className="flex gap-2">
-                <span className="text-cyan-500">→</span>
-                {b}
-              </li>
+              <li key={b}>{b}</li>
             ))}
           </ul>
 
           {section.links && section.links.length > 0 ? (
-            <div className="mt-4 flex flex-wrap gap-2">
+            <div className="gp-chips" style={{ marginTop: "1rem" }}>
               {section.links.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-xs hover:border-cyan-500/40 hover:bg-cyan-950/30"
-                >
-                  Open {link.label} ↗
+                <Link key={link.href} href={link.href} className="gp-chip">
+                  Open {link.label}
                 </Link>
               ))}
             </div>
           ) : null}
 
           {section.codeTabs && section.codeTabs.length > 0 ? (
-            <p className="mt-3 text-xs text-white/45">
-              Code tabs:{" "}
-              <span className="font-mono text-cyan-400/80">
-                {section.codeTabs.join(" → ")}
-              </span>
+            <p className="gp-mono" style={{ marginTop: "0.75rem", fontSize: "0.72rem", color: "var(--gp-text-muted)" }}>
+              Code tabs: {section.codeTabs.join(" → ")}
             </p>
           ) : null}
 
-          {showQa && index === TALK_SECTIONS.length - 1 ? (
-            <div className="mt-6 max-h-48 overflow-y-auto rounded-xl border border-white/10 bg-white/5 p-4">
-              <p className="text-[10px] uppercase text-white/40">Q&A cheatsheet</p>
-              <dl className="mt-2 space-y-2 text-xs">
+          {index === TALK_SECTIONS.length - 1 ? (
+            <div className="gp-panel" style={{ marginTop: "1rem", maxHeight: "12rem", overflow: "auto" }}>
+              <p className="gp-section-label">Q&A</p>
+              <dl className="gp-drawer__qa">
                 {QA_CHEATSHEET.map((item) => (
                   <div key={item.q}>
-                    <dt className="font-medium text-white/85">{item.q}</dt>
-                    <dd className="text-white/55">{item.a}</dd>
+                    <dt>{item.q}</dt>
+                    <dd>{item.a}</dd>
                   </div>
                 ))}
               </dl>
             </div>
           ) : null}
 
-          <div className="mt-6 flex flex-wrap gap-2 border-t border-white/10 pt-4">
+          <div className="gp-row" style={{ marginTop: "1.25rem", gap: "0.5rem" }}>
             {!running && !startedAt ? (
-              <button
-                type="button"
-                onClick={start}
-                className="rounded-lg bg-cyan-600 px-4 py-2 text-sm font-medium hover:bg-cyan-500"
-              >
+              <button type="button" className="gp-btn gp-btn--accent" onClick={start}>
                 Start rehearsal
               </button>
             ) : (
               <>
-                <button
-                  type="button"
-                  onClick={running ? pause : () => setRunning(true)}
-                  className="rounded-lg border border-white/20 px-4 py-2 text-sm hover:bg-white/10"
-                >
-                  {running ? "Pause (P)" : "Resume (P)"}
+                <button type="button" className="gp-btn" onClick={running ? pause : () => setRunning(true)}>
+                  {running ? "Pause" : "Resume"}
                 </button>
-                <button
-                  type="button"
-                  onClick={prev}
-                  disabled={index === 0}
-                  className="rounded-lg border border-white/20 px-4 py-2 text-sm hover:bg-white/10 disabled:opacity-30"
-                >
+                <button type="button" className="gp-btn" onClick={prev} disabled={index === 0}>
                   ← Prev
                 </button>
                 <button
                   type="button"
+                  className="gp-btn"
                   onClick={next}
                   disabled={index >= TALK_SECTIONS.length - 1}
-                  className="rounded-lg border border-white/20 px-4 py-2 text-sm hover:bg-white/10 disabled:opacity-30"
                 >
-                  Next (Space) →
+                  Next →
                 </button>
               </>
             )}
-            <button
-              type="button"
-              onClick={reset}
-              className="rounded-lg px-4 py-2 text-sm text-white/50 hover:text-white"
-            >
+            <button type="button" className="gp-btn gp-btn--ghost" onClick={reset}>
               Reset
             </button>
           </div>
-        </main>
+        </div>
       </div>
 
-      <footer className="shrink-0 border-t border-white/10 px-4 py-2 text-center text-[10px] text-white/35">
+      <p
+        className="gp-mono gp-container"
+        style={{
+          paddingBottom: "1rem",
+          fontSize: "0.62rem",
+          color: "var(--gp-text-faint)",
+          textAlign: "center",
+        }}
+      >
         Space = next · ←/→ sections · P pause · Esc reset
-      </footer>
+      </p>
     </div>
   );
 }

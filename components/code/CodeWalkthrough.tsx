@@ -15,26 +15,20 @@ export function CodeWalkthrough({ snippets }: CodeWalkthroughProps) {
   if (!active) return null;
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-4">
-      <nav className="flex shrink-0 flex-wrap gap-2">
+    <div>
+      <nav className="gp-code-tabs">
         {snippets.map((s) => (
           <button
             key={s.id}
             type="button"
+            className={`gp-code-tab${s.id === activeId ? " is-active" : ""}`}
             onClick={() => setActiveId(s.id)}
-            className={`rounded-lg border px-3 py-1.5 text-left text-xs transition ${
-              s.id === activeId
-                ? "border-cyan-500/50 bg-cyan-950/50 text-cyan-100"
-                : "border-white/10 bg-white/5 text-white/60 hover:border-white/20 hover:text-white"
-            }`}
           >
             {s.title}
           </button>
         ))}
       </nav>
-      <div className="min-h-0 flex-1">
-        <CodeBlock snippet={active} />
-      </div>
+      <CodeBlock snippet={active} />
     </div>
   );
 }

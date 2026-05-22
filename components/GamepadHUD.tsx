@@ -44,19 +44,18 @@ export function GamepadHUD() {
 
   useEffect(() => {
     if (!slotsRef.current) return;
-    if (connectedSlots.length <= 1) {
-      slotsRef.current.textContent = "";
-      return;
-    }
-    slotsRef.current.textContent = `also on slots: ${connectedSlots.join(", ")}`;
+    slotsRef.current.textContent =
+      connectedSlots.length > 1
+        ? `also on slots: ${connectedSlots.join(", ")}`
+        : "";
   }, [connectedSlots]);
 
   useGamepad((state) => {
     if (statusRef.current) {
       statusRef.current.textContent = state.connected ? "connected" : "waiting…";
       statusRef.current.className = state.connected
-        ? "text-green-400"
-        : "text-amber-400";
+        ? "gp-status--ok"
+        : "gp-status--wait";
     }
     if (idRef.current) idRef.current.textContent = state.id || "—";
     if (lxRef.current) lxRef.current.textContent = state.leftStick.x.toFixed(2);
@@ -73,35 +72,33 @@ export function GamepadHUD() {
   });
 
   return (
-    <div className="absolute top-4 left-4 z-10 max-w-sm rounded-lg border border-white/10 bg-black/75 p-4 font-mono text-xs text-white shadow-xl backdrop-blur pointer-events-none">
-      <div className="mb-2 flex items-center justify-between border-b border-white/10 pb-2">
-        <span className="text-[10px] uppercase tracking-wider text-white/50">
+    <div className="gp-hud">
+      <div className="gp-hud__head">
+        <span className="gp-hud__label">
           1 loop · <span ref={subsRef}>0</span> subscribers
         </span>
-        <span className="text-[10px] text-white/40">
+        <span className="gp-hud__meta">
           <span ref={countRef}>0</span> pad{connectedCount === 1 ? "" : "s"}
         </span>
       </div>
-      <div>
-        Primary: <span ref={statusRef} className="text-amber-400">waiting…</span>
+      <div className="gp-hud__line">
+        Primary: <span ref={statusRef} className="gp-status--wait">waiting…</span>
       </div>
-      <div className="truncate text-white/70">
+      <div className="gp-hud__device">
         Device: <span ref={idRef}>—</span>
       </div>
-      <div ref={slotsRef} className="mt-1 truncate text-[10px] text-cyan-400/80" />
-      <div className="mt-2 space-y-0.5">
-        <div>
-          L stick: <span ref={lxRef}>0.00</span>, <span ref={lyRef}>0.00</span>
-        </div>
-        <div>
-          R stick: <span ref={rxRef}>0.00</span>, <span ref={ryRef}>0.00</span>
-        </div>
-        <div>
-          L2: <span ref={l2Ref}>0.00</span> · R2: <span ref={r2Ref}>0.00</span>
-        </div>
-        <div>
-          Buttons: <span ref={btnRef}>—</span>
-        </div>
+      <div ref={slotsRef} className="gp-hud__slots" />
+      <div className="gp-hud__line" style={{ marginTop: "0.5rem" }}>
+        L stick: <span ref={lxRef}>0.00</span>, <span ref={lyRef}>0.00</span>
+      </div>
+      <div className="gp-hud__line">
+        R stick: <span ref={rxRef}>0.00</span>, <span ref={ryRef}>0.00</span>
+      </div>
+      <div className="gp-hud__line">
+        L2: <span ref={l2Ref}>0.00</span> · R2: <span ref={r2Ref}>0.00</span>
+      </div>
+      <div className="gp-hud__line">
+        Buttons: <span ref={btnRef}>—</span>
       </div>
     </div>
   );

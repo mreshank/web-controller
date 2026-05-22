@@ -9,22 +9,26 @@ type StoryPanelProps = {
 
 export function StoryPanel({ chapter, onClose }: StoryPanelProps) {
   return (
-    <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/70 p-6 backdrop-blur-sm">
+    <div className="gp-modal-backdrop">
       <article
-        className="max-h-[85vh] max-w-lg overflow-y-auto rounded-2xl border p-6 shadow-2xl"
-        style={{ borderColor: `${chapter.color}55` }}
+        className="gp-modal gp-modal--story"
+        style={{ borderColor: `${chapter.color}44` }}
       >
-        <p className="font-mono text-xs uppercase tracking-wider" style={{ color: chapter.color }}>
+        <p
+          className="gp-modal__eyebrow"
+          style={{ color: chapter.color }}
+        >
           {chapter.subtitle}
         </p>
-        <h2 className="mt-2 text-2xl font-semibold text-white">{chapter.title}</h2>
-        <p className="mt-4 leading-relaxed text-white/75">{chapter.body}</p>
+        <h2 className="gp-modal__title">{chapter.title}</h2>
+        <p className="gp-modal__body">{chapter.body}</p>
         <button
           type="button"
+          className="gp-btn gp-btn--block"
+          style={{ marginTop: "1.25rem" }}
           onClick={onClose}
-          className="mt-6 w-full rounded-lg border border-white/20 py-2 text-sm text-white/80 hover:bg-white/10"
         >
-          Close (Esc or ○)
+          Close (Esc)
         </button>
       </article>
     </div>

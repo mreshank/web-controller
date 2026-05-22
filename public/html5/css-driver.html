@@ -4,45 +4,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>CSS Gamepad Driver</title>
-    <link rel="stylesheet" href="style.css" />
-    <style>
-      #stage {
-        position: relative;
-        height: min(70vh, 420px);
-        margin: 1rem 0;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        background: radial-gradient(circle at 50% 50%, #1e293b, #030712);
-        overflow: hidden;
-      }
-      #car {
-        position: absolute;
-        width: 48px;
-        height: 48px;
-        left: 0;
-        top: 0;
-        border-radius: 10px;
-        background: linear-gradient(135deg, #f472b6, #a78bfa);
-        box-shadow: 0 0 24px rgba(244, 114, 182, 0.55);
-        will-change: transform;
-      }
-      .orb {
-        position: absolute;
-        width: 22px;
-        height: 22px;
-        border-radius: 50%;
-        background: #fde047;
-        box-shadow: 0 0 14px #facc15;
-      }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://static.mreshank.com/gamepad/styles.css" />
   </head>
-  <body>
-    <div class="wrap">
-      <p><a href="index.html">← HTML5 lab</a></p>
-      <h1>CSS-only driver</h1>
-      <p id="status">Press any button on your controller</p>
-      <div id="stage">
-        <div id="car"></div>
+  <body class="gp-root gp-html5">
+    <div class="gp-wrap">
+      <p><a href="index.html" class="gp-btn gp-btn--ghost" style="display: inline-flex; margin-bottom: 1rem">← Lab</a></p>
+      <h1 class="gp-heading">CSS-only driver</h1>
+      <p id="status" class="gp-mono" style="font-size: 0.8rem; color: var(--gp-warn)">
+        Press any button on your controller
+      </p>
+      <div id="stage" class="gp-html5-stage">
+        <div id="car" class="gp-html5-car"></div>
       </div>
     </div>
     <script src="gamepad.js"></script>
@@ -63,7 +41,7 @@
 
       for (let i = 0; i < 10; i++) {
         const o = document.createElement("div");
-        o.className = "orb";
+        o.className = "gp-html5-orb";
         o.style.left = 40 + Math.random() * (stage.clientWidth - 80) + "px";
         o.style.top = 40 + Math.random() * (stage.clientHeight - 80) + "px";
         stage.appendChild(o);
@@ -74,9 +52,11 @@
         const st = document.getElementById("status");
         if (!s.connected) {
           st.textContent = "Connect controller & press any button";
+          st.style.color = "var(--gp-warn)";
           return;
         }
         st.textContent = s.id;
+        st.style.color = "var(--gp-demo)";
         x += s.lx * 7;
         y += s.ly * 7;
         x = Math.max(8, Math.min(stage.clientWidth - 56, x));
@@ -85,8 +65,8 @@
         const scale = 1 + s.r2 * 0.35;
         car.style.transform = `translate(${x}px,${y}px) rotate(${rot}deg) scale(${scale})`;
         car.style.background = s.buttons[0]
-          ? "linear-gradient(135deg,#38bdf8,#22d3ee)"
-          : "linear-gradient(135deg,#f472b6,#a78bfa)";
+          ? "linear-gradient(135deg,#00e8cc,#38bdf8)"
+          : "linear-gradient(135deg,var(--gp-game),var(--gp-story))";
         orbs.forEach((o) => {
           const ox = parseFloat(o.style.left);
           const oy = parseFloat(o.style.top);

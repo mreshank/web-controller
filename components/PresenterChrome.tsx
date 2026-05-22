@@ -27,81 +27,53 @@ export function PresenterChrome({ variant = "live" }: PresenterChromeProps) {
       <>
         <PresenterNotes open={notesOpen} onClose={() => setNotesOpen(false)} />
         <KeyboardHelp open={helpOpen} onClose={() => setHelpOpen(false)} />
-        <p className="pointer-events-none absolute bottom-2 left-1/2 z-10 -translate-x-1/2 text-[9px] text-white/25">
-          Press H to show controls
-        </p>
+        <p className="gp-hide-chrome-hint">Press H to show controls</p>
       </>
     );
   }
 
   return (
     <>
-      <div className="absolute top-4 right-4 z-10 flex flex-col items-end gap-1.5 text-[10px]">
-        <div className="flex flex-wrap justify-end gap-1.5">
-          <Link
-            href="/rehearse"
-            className="rounded border border-violet-500/30 bg-violet-950/40 px-2 py-1 text-violet-100/90 backdrop-blur transition hover:border-violet-400/50"
-          >
-            Rehearse (R)
+      <div className="gp-chrome">
+        <div className="gp-chrome__row">
+          <Link href="/" className="gp-btn gp-btn--ghost">
+            Hub
           </Link>
-          <Link
-            href="/stage"
-            className="rounded border border-white/10 bg-black/60 px-2 py-1 text-white/70 backdrop-blur transition hover:border-white/25 hover:text-white"
-          >
-            Stage (S)
+          <Link href="/rehearse" className="gp-btn">
+            Rehearse
           </Link>
-          <Link
-            href="/code"
-            className="rounded border border-cyan-500/30 bg-cyan-950/40 px-2 py-1 text-cyan-100/90 backdrop-blur transition hover:border-cyan-400/50"
-          >
-            Code (C)
+          <Link href="/stage" className="gp-btn">
+            Stage
           </Link>
-          <Link
-            href="/backup"
-            className="rounded border border-white/10 bg-black/60 px-2 py-1 text-white/70 backdrop-blur transition hover:border-white/25 hover:text-white"
-          >
-            Backup (B)
+          <Link href="/code" className="gp-btn gp-btn--accent">
+            Code
           </Link>
-          <button
-            type="button"
-            onClick={toggleNotes}
-            className="rounded border border-white/10 bg-black/60 px-2 py-1 text-white/70 backdrop-blur transition hover:border-white/25 hover:text-white"
-          >
-            Notes (N)
+          <Link href="/backup" className="gp-btn">
+            Backup
+          </Link>
+          <button type="button" className="gp-btn" onClick={toggleNotes}>
+            Notes
           </button>
-          <button
-            type="button"
-            onClick={toggleHelp}
-            className="rounded border border-white/10 bg-black/60 px-2 py-1 text-white/70 backdrop-blur transition hover:border-white/25 hover:text-white"
-          >
-            Keys (?)
+          <button type="button" className="gp-btn" onClick={toggleHelp}>
+            Keys
           </button>
         </div>
-        <div className="flex flex-wrap justify-end gap-1.5 text-white/40">
+        <div className="gp-chrome__row">
           {variant === "live" ? (
             <>
-              <Link
-                href="/game"
-                className="rounded border border-fuchsia-500/30 bg-fuchsia-950/40 px-2 py-0.5 text-fuchsia-200/80 hover:border-fuchsia-400/50"
-              >
+              <Link href="/game" className="gp-btn gp-btn--game">
                 Game →
               </Link>
-              <Link
-                href="/naive"
-                className="rounded border border-amber-500/30 bg-amber-950/40 px-2 py-0.5 text-amber-200/80 hover:border-amber-400/50"
-              >
+              <Link href="/naive" className="gp-btn gp-btn--naive">
                 Naive →
               </Link>
             </>
           ) : (
-            <Link
-              href="/demo"
-              className="rounded border border-green-500/30 bg-green-950/40 px-2 py-0.5 text-green-200/80 hover:border-green-400/50"
-            >
+            <Link href="/demo" className="gp-btn gp-btn--accent">
               ← Talk demo
             </Link>
           )}
-          <span className="px-1 py-0.5">F fullscreen · H hide</span>
+          <span className="gp-chrome__hint">F fullscreen · H hide</span>
         </div>
       </div>
 

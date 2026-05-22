@@ -11,7 +11,7 @@ type StoryWorldProps = {
 
 export function StoryWorld({ nearbyId, onNearby, onInteract }: StoryWorldProps) {
   return (
-    <div className="relative h-screen w-screen overflow-hidden bg-slate-950">
+    <div className="gp-canvas-wrap">
       <SceneShell
         camera={{ position: [0, 3, 18], fov: 60 }}
         showStars

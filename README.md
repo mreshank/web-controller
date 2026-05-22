@@ -57,3 +57,28 @@ Shortcuts on demo: **N** notes · **B** backup · **C** code · **S** stage · *
 - Controllers charged, button press before each page
 - `public/backup-demo.mp4` (gitignored)
 - Bookmark `/stage` and `/game`
+
+## Master stylesheet (logic-only reuse)
+
+**Source of truth:** `styles/gamepad.css` — synced to `public/gamepad/styles.css` on `npm run dev` / `npm run build`.
+
+**CDN (production):** `https://static.mreshank.com/gamepad/styles.css`
+
+### Publish to static.mreshank.com
+
+1. Upload `styles/gamepad.css` (or the synced `public/gamepad/styles.css`) to your static host at path `/gamepad/styles.css`.
+2. Ensure `Cache-Control` allows updates when you ship design changes (or version the URL, e.g. `styles.v2.css`).
+3. In any HTML page, load fonts + stylesheet and use `gp-*` classes — write only gamepad logic:
+
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:...&family=IBM+Plex+Mono...&family=Syne..." rel="stylesheet" />
+<link rel="stylesheet" href="https://static.mreshank.com/gamepad/styles.css" />
+<body class="gp-root">
+```
+
+4. Copy markup patterns from `components/hub/HubPage.tsx`, `html5/index.html`, or presenter pages. Prefix every class with `gp-` (hub, HUD, cards, connect prompt, rehearse, stage, html5 lab).
+
+**This Next app:** dev uses `/gamepad/styles.css` locally; production uses the CDN (`lib/stylesheet.ts`). Override with `NEXT_PUBLIC_GP_STYLESHEET=/gamepad/styles.css` to force local in prod builds.
+
+**HTML5 folder:** demos link the CDN directly so they work from `npx serve html5` without Next.js. Until the file is uploaded, swap the `href` to `http://localhost:3000/gamepad/styles.css` while `npm run dev` is running.

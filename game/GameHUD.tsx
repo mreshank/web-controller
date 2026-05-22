@@ -47,32 +47,27 @@ export function GameHUD() {
 
   return (
     <>
-      <div className="pointer-events-none absolute top-4 left-4 z-10 rounded-xl border border-white/10 bg-black/75 p-4 font-mono text-xs text-white backdrop-blur">
-        <p className="text-[10px] uppercase tracking-wider text-cyan-400/90">
-          Orb Rush · multiplayer
+      <div className="gp-hud gp-hud--game">
+        <div className="gp-hud__head">
+          <span className="gp-hud__label">Orb Rush</span>
+        </div>
+        <div ref={scoreRef} className="gp-hud__line" style={{ fontSize: "0.85rem" }} />
+        <p className="gp-hud__line" style={{ marginTop: "0.5rem" }}>
+          Orbs: <span ref={orbsRef}>0</span> · R2 boost · × pulse
         </p>
-        <div ref={scoreRef} className="mt-2 text-sm" />
-        <p className="mt-2 text-white/50">
-          Orbs: <span ref={orbsRef}>0</span> · L2 lift · R2 boost · × pulse
-        </p>
-        <p className="mt-2 text-[10px] text-white/40">
-          Connect up to 4 controllers · press any button each
+        <p className="gp-hud__meta" style={{ marginTop: "0.35rem" }}>
+          Up to 4 controllers
         </p>
       </div>
-      <div className="absolute top-4 right-4 z-10 flex gap-2 text-xs">
-        <button
-          type="button"
-          onClick={reset}
-          className="rounded border border-white/15 bg-black/60 px-3 py-1 text-white/80 hover:bg-white/10"
-        >
-          Reset
-        </button>
-        <Link
-          href="/"
-          className="rounded border border-white/15 bg-black/60 px-3 py-1 text-white/80 hover:bg-white/10"
-        >
-          Hub
-        </Link>
+      <div className="gp-chrome">
+        <div className="gp-chrome__row">
+          <button type="button" className="gp-btn" onClick={reset}>
+            Reset
+          </button>
+          <Link href="/" className="gp-btn">
+            Hub
+          </Link>
+        </div>
       </div>
     </>
   );

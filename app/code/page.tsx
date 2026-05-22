@@ -6,44 +6,40 @@ export default function CodePage() {
   const snippets = getTalkCodeSnippets();
 
   return (
-    <div className="flex h-screen flex-col bg-slate-950 text-white">
-      <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-white/10 px-4 py-3 sm:px-6">
+    <div className="gp-page" style={{ display: "flex", flexDirection: "column", minHeight: "100dvh" }}>
+      <header className="gp-page-header">
         <div>
-          <p className="text-[10px] uppercase tracking-wider text-white/40">
-            Talk code walkthrough
-          </p>
-          <h1 className="text-sm font-medium sm:text-base">
-            React + 60fps — refs, one poll loop, direct DOM
-          </h1>
+          <p className="gp-eyebrow">Code walkthrough</p>
+          <h1 className="gp-heading">React + 60fps — refs, one poll loop</h1>
         </div>
-        <div className="flex flex-wrap gap-2 text-xs">
-          <Link
-            href="/demo"
-            className="rounded border border-green-500/30 bg-green-950/40 px-3 py-1 text-green-200/90 hover:border-green-400/50"
-          >
+        <div className="gp-page-header__actions">
+          <Link href="/demo" className="gp-btn gp-btn--accent">
             Talk demo
           </Link>
-          <Link
-            href="/naive"
-            className="rounded border border-amber-500/30 bg-amber-950/40 px-3 py-1 text-amber-200/90 hover:border-amber-400/50"
-          >
-            Naive demo
+          <Link href="/naive" className="gp-btn gp-btn--naive">
+            Naive
           </Link>
-          <Link
-            href="/stage"
-            className="rounded border border-white/15 px-3 py-1 text-white/70 hover:bg-white/10"
-          >
-            Stage hub
+          <Link href="/stage" className="gp-btn">
+            Stage
           </Link>
         </div>
       </header>
 
-      <main className="min-h-0 flex-1 p-4 sm:p-6">
+      <main className="gp-container" style={{ flex: 1, paddingBottom: "2rem" }}>
         <CodeWalkthrough snippets={snippets} />
       </main>
 
-      <footer className="shrink-0 border-t border-white/10 px-4 py-2 text-center text-[10px] text-white/35">
-        Tab through sections · yellow = call out on stage · source read from this repo at build time
+      <footer
+        className="gp-mono"
+        style={{
+          padding: "0.75rem",
+          textAlign: "center",
+          fontSize: "0.65rem",
+          color: "var(--gp-text-faint)",
+          borderTop: "1px solid var(--gp-border)",
+        }}
+      >
+        Highlighted lines = call out on stage
       </footer>
     </div>
   );

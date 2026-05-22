@@ -4,27 +4,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Canvas Starship</title>
-    <link rel="stylesheet" href="style.css" />
-    <style>
-      #c {
-        width: 100%;
-        max-width: 960px;
-        height: min(70vh, 520px);
-        display: block;
-        margin: 1rem auto;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        background: #030712;
-      }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://static.mreshank.com/gamepad/styles.css" />
   </head>
-  <body>
-    <div class="wrap">
-      <p><a href="index.html">← HTML5 lab</a></p>
-      <h1>Twin-stick canvas ship</h1>
-      <p id="status">Press any button on your controller</p>
-      <canvas id="c"></canvas>
-      <p style="font-size: 0.75rem; color: #64748b">
+  <body class="gp-root gp-html5">
+    <div class="gp-wrap">
+      <p><a href="index.html" class="gp-btn gp-btn--ghost" style="display: inline-flex; margin-bottom: 1rem">← Lab</a></p>
+      <h1 class="gp-heading">Twin-stick canvas ship</h1>
+      <p id="status" class="gp-mono" style="font-size: 0.8rem; color: var(--gp-warn)">
+        Press any button on your controller
+      </p>
+      <canvas id="c" class="gp-html5-canvas"></canvas>
+      <p class="gp-mono" style="font-size: 0.72rem; color: var(--gp-text-faint)">
         Left stick · move · Right stick · rotate · R2 · boost
       </p>
     </div>
@@ -56,7 +52,7 @@
       resize();
 
       function draw(w, h) {
-        ctx.fillStyle = "#030712";
+        ctx.fillStyle = "#030408";
         ctx.fillRect(0, 0, w, h);
         stars.forEach((s) => {
           ctx.fillStyle = `rgba(255,255,255,${0.15 + s.z * 0.5})`;
@@ -64,7 +60,7 @@
         });
         ship.trail.forEach((t, i) => {
           ctx.globalAlpha = (i / ship.trail.length) * 0.7;
-          ctx.fillStyle = "#38bdf8";
+          ctx.fillStyle = "#00e8cc";
           ctx.beginPath();
           ctx.arc(t.x, t.y, 2.5, 0, Math.PI * 2);
           ctx.fill();
@@ -90,10 +86,12 @@
         const h = canvas.getBoundingClientRect().height;
         if (!s.connected) {
           st.textContent = "Connect controller & press any button";
+          st.style.color = "var(--gp-warn)";
           draw(w, h);
           return;
         }
         st.textContent = s.id;
+        st.style.color = "var(--gp-demo)";
         ship.a += s.rx * 0.06;
         const sp = 4 + s.r2 * 8;
         ship.x += Math.sin(ship.a) * -s.ly * sp + Math.cos(ship.a) * s.lx * sp;

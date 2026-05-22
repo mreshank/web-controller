@@ -4,58 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Three.js + Gamepad — Standalone</title>
-    <style>
-      * {
-        box-sizing: border-box;
-        margin: 0;
-      }
-      body {
-        font-family: system-ui, sans-serif;
-        background: #030712;
-        color: #e2e8f0;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-      header {
-        width: 100%;
-        max-width: 960px;
-        padding: 1rem 1.25rem;
-      }
-      header a {
-        color: #38bdf8;
-        font-size: 0.85rem;
-      }
-      h1 {
-        font-size: 1.25rem;
-        margin-top: 0.5rem;
-      }
-      #status {
-        font-size: 0.8rem;
-        color: #fbbf24;
-        margin-top: 0.35rem;
-      }
-      #status.ok {
-        color: #4ade80;
-      }
-      #host {
-        flex: 1;
-        width: 100%;
-        min-height: 60vh;
-      }
-      #host canvas {
-        display: block;
-        width: 100% !important;
-        height: 100% !important;
-      }
-      footer {
-        font-size: 0.7rem;
-        color: #64748b;
-        padding: 0.75rem;
-        text-align: center;
-      }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://static.mreshank.com/gamepad/styles.css" />
     <script type="importmap">
       {
         "imports": {
@@ -64,15 +19,17 @@
       }
     </script>
   </head>
-  <body>
-    <header>
-      <a href="index.html">← HTML5 lab</a>
-      <h1>Three.js + Gamepad (standalone)</h1>
-      <p id="status">Plug in controller · press any button</p>
+  <body class="gp-root gp-html5" style="display: flex; flex-direction: column; min-height: 100vh; padding: 0">
+    <header class="gp-wrap" style="padding-top: 1rem; width: 100%">
+      <a href="index.html" class="gp-btn gp-btn--ghost" style="display: inline-flex">← Lab</a>
+      <h1 class="gp-heading" style="margin-top: 0.5rem">Three.js + Gamepad (standalone)</h1>
+      <p id="status" class="gp-mono" style="font-size: 0.8rem; color: var(--gp-warn); margin-top: 0.35rem">
+        Plug in controller · press any button
+      </p>
     </header>
-    <div id="host"></div>
-    <footer>
-      No Next.js · No npm · Open this file via a local server (see README.md)
+    <div id="host" style="flex: 1; width: 100%; min-height: 60vh"></div>
+    <footer class="gp-mono gp-wrap" style="padding-bottom: 1rem; font-size: 0.68rem; color: var(--gp-text-faint); text-align: center; width: 100%">
+      No Next.js · No npm · Serve this folder (see README)
     </footer>
 
     <script type="module">
@@ -104,8 +61,8 @@
       const status = document.getElementById("status");
 
       const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x030712);
-      scene.fog = new THREE.Fog(0x030712, 15, 45);
+      scene.background = new THREE.Color(0x030408);
+      scene.fog = new THREE.Fog(0x030408, 15, 45);
 
       const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
       camera.position.set(0, 4, 9);
@@ -120,7 +77,7 @@
       sun.position.set(8, 12, 6);
       sun.castShadow = true;
       scene.add(sun);
-      const rim = new THREE.PointLight(0x38bdf8, 0.8, 30);
+      const rim = new THREE.PointLight(0x00e8cc, 0.8, 30);
       rim.position.set(-6, 4, -4);
       scene.add(rim);
 
@@ -161,8 +118,6 @@
       );
       scene.add(stars);
 
-      const pad = { lx: 0, ly: 0, rx: 0, connected: false };
-
       function resize() {
         const w = host.clientWidth;
         const h = host.clientHeight;
@@ -178,12 +133,8 @@
 
         const gp = readPad();
         if (gp) {
-          pad.connected = true;
-          pad.lx = gp.lx;
-          pad.ly = gp.ly;
-          pad.rx = gp.rx;
           status.textContent = "Connected: " + gp.id;
-          status.className = "ok";
+          status.style.color = "var(--gp-demo)";
 
           const speed = 0.12 + gp.r2 * 0.2;
           cube.position.x += gp.lx * speed;
@@ -192,12 +143,11 @@
           cube.rotation.x += gp.ry * 0.03;
           const scale = 1 + gp.r2 * 0.8;
           cube.scale.setScalar(scale);
-          cube.material.color.setHex(gp.cross ? 0x38bdf8 : 0xf97316);
-          cube.material.emissive.setHex(gp.cross ? 0x38bdf8 : 0xf97316);
+          cube.material.color.setHex(gp.cross ? 0x00e8cc : 0xf97316);
+          cube.material.emissive.setHex(gp.cross ? 0x00e8cc : 0xf97316);
         } else {
-          pad.connected = false;
           status.textContent = "Plug in controller · press any button";
-          status.className = "";
+          status.style.color = "var(--gp-warn)";
         }
 
         cube.position.x = Math.max(-14, Math.min(14, cube.position.x));

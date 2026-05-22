@@ -4,63 +4,24 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Gamepad Visualizer</title>
-    <link rel="stylesheet" href="style.css" />
-    <style>
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-        margin-top: 1rem;
-        max-width: 480px;
-      }
-      .axis label {
-        font-size: 0.75rem;
-        color: #94a3b8;
-      }
-      .axis .val {
-        font-variant-numeric: tabular-nums;
-        font-size: 0.85rem;
-        color: #e2e8f0;
-      }
-      .bar {
-        height: 10px;
-        margin-top: 0.35rem;
-        background: #1e293b;
-        border-radius: 5px;
-        position: relative;
-        overflow: hidden;
-      }
-      .bar .mid {
-        position: absolute;
-        left: 50%;
-        top: 0;
-        bottom: 0;
-        width: 2px;
-        background: #475569;
-        transform: translateX(-50%);
-      }
-      .bar .fill {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        background: linear-gradient(90deg, #38bdf8, #a78bfa);
-        border-radius: 5px;
-      }
-      #slots {
-        margin-top: 1.5rem;
-        font-size: 0.75rem;
-        color: #64748b;
-      }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://static.mreshank.com/gamepad/styles.css" />
   </head>
-  <body>
-    <div class="wrap">
-      <p><a href="index.html">← HTML5 lab</a></p>
-      <h1>Live gamepad visualizer</h1>
-      <p id="status">Press any button after plugging in</p>
-      <div class="grid" id="axes"></div>
-      <pre id="btns" style="font-size: 0.75rem; color: #94a3b8; margin-top: 1rem"></pre>
-      <pre id="slots"></pre>
+  <body class="gp-root gp-html5">
+    <div class="gp-wrap">
+      <p><a href="index.html" class="gp-btn gp-btn--ghost" style="display: inline-flex; margin-bottom: 1rem">← Lab</a></p>
+      <h1 class="gp-heading">Live gamepad visualizer</h1>
+      <p id="status" class="gp-mono" style="font-size: 0.8rem; color: var(--gp-warn)">
+        Press any button after plugging in
+      </p>
+      <div class="gp-axis-grid" id="axes"></div>
+      <pre id="btns" class="gp-mono" style="font-size: 0.75rem; color: var(--gp-text-muted); margin-top: 1rem"></pre>
+      <pre id="slots" class="gp-mono" style="font-size: 0.72rem; color: var(--gp-text-faint); margin-top: 0.5rem"></pre>
     </div>
     <script src="gamepad.js"></script>
     <script>
@@ -73,11 +34,11 @@
       const axesEl = document.getElementById("axes");
       labels.forEach(([label]) => {
         const div = document.createElement("div");
-        div.className = "axis";
+        div.className = "gp-axis";
         div.innerHTML = `
-          <label>${label}</label>
-          <span class="val" id="v-${label}">0.00</span>
-          <div class="bar"><span class="mid"></span><span class="fill" id="b-${label}"></span></div>`;
+          <label class="gp-section-label">${label}</label>
+          <span class="gp-mono val" id="v-${label}">0.00</span>
+          <div class="gp-bar"><span class="gp-mid"></span><span class="gp-fill" id="b-${label}"></span></div>`;
         axesEl.appendChild(div);
       });
 
@@ -98,11 +59,11 @@
         const st = document.getElementById("status");
         if (!s.connected) {
           st.textContent = "No controller — plug in & press any button";
-          st.style.color = "#fbbf24";
+          st.style.color = "var(--gp-warn)";
           return;
         }
         st.textContent = "Connected: " + s.id + " (slot " + s.index + ")";
-        st.style.color = "#4ade80";
+        st.style.color = "var(--gp-demo)";
         setAxis("LX", s.lx);
         setAxis("LY", s.ly);
         setAxis("RX", s.rx);

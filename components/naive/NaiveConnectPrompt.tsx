@@ -14,10 +14,10 @@ export function NaiveConnectPrompt() {
   if (!visible) return null;
 
   return (
-    <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-slate-950/60">
-      <div className="max-w-md rounded-2xl border border-amber-500/20 bg-slate-900/90 px-8 py-6 text-center">
-        <p className="text-lg font-medium text-white">Plug in a controller</p>
-        <p className="mt-2 text-sm text-white/60">Press any button to activate</p>
+    <div className="gp-connect gp-pointer-none" style={{ zIndex: 20 }}>
+      <div className="gp-connect__panel" style={{ borderColor: "rgba(251, 191, 36, 0.25)" }}>
+        <p className="gp-connect__title">Plug in a controller</p>
+        <p className="gp-connect__text">Press any button to activate (naive demo uses two poll loops)</p>
       </div>
     </div>
   );

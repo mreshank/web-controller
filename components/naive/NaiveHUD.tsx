@@ -6,8 +6,6 @@ import {
   useGamepadNaive,
 } from "@/hooks/useGamepadNaive";
 
-const BUTTON_LABELS = ["×", "○", "□", "△"];
-
 function subscribeNaiveLoops(onStoreChange: () => void) {
   const handler = () => onStoreChange();
   window.addEventListener("naive-loop-change", handler);
@@ -34,36 +32,30 @@ export function NaiveHUD() {
     if (statusRef.current) {
       statusRef.current.textContent = state.connected ? "connected" : "waiting…";
       statusRef.current.className = state.connected
-        ? "text-green-400"
-        : "text-amber-400";
+        ? "gp-status--ok"
+        : "gp-status--wait";
     }
     if (lxRef.current) lxRef.current.textContent = state.leftStick.x.toFixed(2);
     if (lyRef.current) lyRef.current.textContent = state.leftStick.y.toFixed(2);
   });
 
   return (
-    <div className="absolute top-4 left-4 z-10 max-w-sm rounded-lg border border-amber-500/30 bg-black/80 p-4 font-mono text-xs text-white shadow-xl backdrop-blur pointer-events-none">
-      <div className="mb-2 border-b border-amber-500/20 pb-2">
-        <span className="text-[10px] uppercase tracking-wider text-amber-400/90">
-          Anti-pattern demo
-        </span>
-        <p className="mt-1 text-[10px] text-white/50">
-          Cube + HUD each call <code className="text-amber-200">useGamepadNaive</code>
-        </p>
+    <div className="gp-hud gp-hud--naive">
+      <div className="gp-hud__head">
+        <span className="gp-hud__label">Anti-pattern</span>
       </div>
-      <div className="text-amber-300">
+      <p className="gp-hud__line gp-status--warn">
         Poll loops: <span ref={loopsRef}>0</span>
-        {loopCount >= 2 ? " ← wasteful" : ""}
-      </div>
-      <div className="mt-1">
-        Status: <span ref={statusRef} className="text-amber-400">waiting…</span>
-      </div>
-      <div className="mt-2 text-white/60">
+        {loopCount >= 2 ? " — wasteful" : ""}
+      </p>
+      <p className="gp-hud__line">
+        Status: <span ref={statusRef} className="gp-status--wait">waiting…</span>
+      </p>
+      <p className="gp-hud__line">
         L stick: <span ref={lxRef}>0.00</span>, <span ref={lyRef}>0.00</span>
-      </div>
-      <p className="mt-3 text-[10px] leading-relaxed text-white/45">
-        Same inputs, double <code>getGamepads()</code> per frame. Compare with the
-        main demo (1 loop, many subscribers).
+      </p>
+      <p className="gp-hud__meta" style={{ marginTop: "0.5rem" }}>
+        Cube + HUD each spin their own RAF
       </p>
     </div>
   );

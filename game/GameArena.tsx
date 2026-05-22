@@ -20,7 +20,7 @@ export function GameArena() {
   const slots = connected.length > 0 ? connected : [0];
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden bg-slate-950">
+    <div className="gp-canvas-wrap">
       <SceneShell camera={{ position: [0, 28, 32], fov: 45 }} showStars>
         <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
           <planeGeometry args={[ARENA_HALF * 2.2, ARENA_HALF * 2.2]} />
