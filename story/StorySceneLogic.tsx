@@ -1,25 +1,26 @@
 "use client";
 
-import { Float, OrbitControls } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 import { STORY_CHAPTERS } from "@/story/chapters";
 import { StoryBeacon } from "@/story/StoryBeacon";
 import { StoryCamera } from "@/story/StoryCamera";
+import { StoryEnvironment } from "@/story/StoryEnvironment";
 import { useGamepad } from "@/hooks/useGamepad";
 import type { GamepadState } from "@/lib/gamepad";
 
-const PROXIMITY = 3.5;
+const PROXIMITY = 5.5;
 
 type StorySceneLogicProps = {
   nearbyId: string | null;
+  visited: Set<string>;
   onNearby: (chapterId: string | null) => void;
   onInteract: (chapterId: string) => void;
 };
 
-/** Must render as a child of <Canvas> — all R3F hooks live here. */
 export function StorySceneLogic({
   nearbyId,
+  visited,
   onNearby,
   onInteract,
 }: StorySceneLogicProps) {
@@ -61,6 +62,7 @@ export function StorySceneLogic({
 
   return (
     <>
+      <StoryEnvironment />
       <StoryCamera />
       {STORY_CHAPTERS.map((ch) => (
         <StoryBeacon
@@ -68,20 +70,9 @@ export function StorySceneLogic({
           chapter={ch}
           active={nearbyId === ch.id}
           nearby={nearbyId === ch.id}
+          visited={visited.has(ch.id)}
         />
       ))}
-      <Float speed={1.2} rotationIntensity={0.1} floatIntensity={0.4}>
-        <mesh position={[0, 8, 0]}>
-          <octahedronGeometry args={[1.5, 0]} />
-          <meshStandardMaterial
-            color="#818cf8"
-            emissive="#6366f1"
-            emissiveIntensity={0.8}
-            wireframe
-          />
-        </mesh>
-      </Float>
-      <OrbitControls enablePan={false} enableRotate={false} enableZoom={false} />
     </>
   );
 }

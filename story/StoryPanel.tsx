@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { StoryChapter } from "@/story/chapters";
 
 type StoryPanelProps = {
@@ -12,24 +13,35 @@ export function StoryPanel({ chapter, onClose }: StoryPanelProps) {
     <div className="gp-modal-backdrop">
       <article
         className="gp-modal gp-modal--story"
-        style={{ borderColor: `${chapter.color}44` }}
+        style={{ borderColor: `${chapter.color}66`, maxWidth: "32rem" }}
       >
-        <p
-          className="gp-modal__eyebrow"
-          style={{ color: chapter.color }}
-        >
+        <p className="gp-modal__eyebrow" style={{ color: chapter.color }}>
           {chapter.subtitle}
         </p>
         <h2 className="gp-modal__title">{chapter.title}</h2>
+        <p className="gp-story-hook" style={{ color: chapter.color }}>
+          {chapter.hook}
+        </p>
         <p className="gp-modal__body">{chapter.body}</p>
-        <button
-          type="button"
-          className="gp-btn gp-btn--block"
-          style={{ marginTop: "1.25rem" }}
-          onClick={onClose}
-        >
-          Close (Esc)
-        </button>
+        <ul className="gp-story-bullets">
+          {chapter.bullets.map((b) => (
+            <li key={b}>{b}</li>
+          ))}
+        </ul>
+        <div className="gp-story-actions">
+          {chapter.demoHref ? (
+            <Link
+              href={chapter.demoHref}
+              className="gp-btn gp-btn--accent"
+              style={{ borderColor: `${chapter.color}55` }}
+            >
+              {chapter.demoLabel ?? "Try demo"} →
+            </Link>
+          ) : null}
+          <button type="button" className="gp-btn" onClick={onClose}>
+            Close (Esc)
+          </button>
+        </div>
       </article>
     </div>
   );

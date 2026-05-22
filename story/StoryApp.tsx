@@ -34,6 +34,7 @@ export function StoryApp() {
     <Providers>
       <StoryWorld
         nearbyId={nearbyId}
+        visited={visited}
         onNearby={setNearbyId}
         onInteract={onInteract}
       />

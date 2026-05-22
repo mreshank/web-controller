@@ -737,6 +737,67 @@
   color: var(--gp-text-muted);
 }
 
+.gp-story-hook {
+  margin: 0.85rem 0 0;
+  font-family: var(--gp-font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.gp-story-bullets {
+  margin: 1rem 0 0;
+  padding-left: 1.15rem;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--gp-text);
+}
+
+.gp-story-bullets li {
+  margin-top: 0.45rem;
+}
+
+.gp-story-bullets li::marker {
+  color: var(--gp-story);
+}
+
+.gp-story-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.35rem;
+}
+
+.gp-story-nearby {
+  font-family: var(--gp-font-display);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.gp-story-progress {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.85rem;
+}
+
+.gp-story-dot {
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  border: 2px solid var(--gp-border-strong);
+  opacity: 0.5;
+}
+
+.gp-story-dot.is-visited {
+  opacity: 1;
+}
+
+.gp-story-dot.is-near {
+  opacity: 1;
+  box-shadow: 0 0 10px currentColor;
+}
+
 /* Presenter notes drawer */
 .gp-drawer {
   position: absolute;
