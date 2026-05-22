@@ -1,32 +1,50 @@
-import { ARENA_HALF, ORB_COUNT } from "@/game/config";
+import { GOLDEN_ORB_COUNT, ORB_COUNT, WORLD_HALF } from "@/game/config";
+import { terrainHeight } from "@/game/terrain";
 
-export const orbPositions: Array<[number, number, number]> = Array.from(
-  { length: ORB_COUNT },
-  () => [
-    (Math.random() - 0.5) * ARENA_HALF * 1.6,
-    0.8 + Math.random() * 0.5,
-    (Math.random() - 0.5) * ARENA_HALF * 1.6,
-  ]
-);
+export type OrbDef = {
+  position: [number, number, number];
+  golden: boolean;
+};
+
+function seeded(seed: number) {
+  return () => {
+    seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+    return seed / 0x7fffffff;
+  };
+}
+
+const rnd = seeded(4242);
+
+export const orbDefs: OrbDef[] = Array.from({ length: ORB_COUNT }, (_, i) => {
+  const golden = i >= ORB_COUNT - GOLDEN_ORB_COUNT;
+  const x = (rnd() - 0.5) * WORLD_HALF * 1.55;
+  const z = (rnd() - 0.5) * WORLD_HALF * 1.55;
+  const y = terrainHeight(x, z) + (golden ? 1.4 : 1.1);
+  return { position: [x, y, z], golden };
+});
+
+/** @deprecated use orbDefs */
+export const orbPositions = orbDefs.map((o) => o.position);
 
 export const collectedOrbIds = new Set<number>();
 
 export function tryCollectOrb(
-  slotIndex: number,
+  _slotIndex: number,
   x: number,
   z: number
-): boolean {
-  for (let i = 0; i < orbPositions.length; i++) {
+): number | null {
+  for (let i = 0; i < orbDefs.length; i++) {
     if (collectedOrbIds.has(i)) continue;
-    const o = orbPositions[i]!;
-    const dx = x - o[0];
-    const dz = z - o[2];
-    if (dx * dx + dz * dz < 1.2) {
+    const o = orbDefs[i]!;
+    const dx = x - o.position[0];
+    const dz = z - o.position[2];
+    const r = o.golden ? 1.6 : 1.25;
+    if (dx * dx + dz * dz < r * r) {
       collectedOrbIds.add(i);
-      return true;
+      return i;
     }
   }
-  return false;
+  return null;
 }
 
 export function resetOrbs() {
