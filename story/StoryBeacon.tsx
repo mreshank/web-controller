@@ -159,7 +159,7 @@ export function StoryBeacon({ chapter, active, nearby, visited }: StoryBeaconPro
         anchorY="middle"
         maxWidth={5}
       >
-        {nearby ? "Press × to read" : chapter.subtitle}
+        {nearby ? "× open · ○ close" : chapter.subtitle}
       </Text>
     </group>
   );

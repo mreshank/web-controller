@@ -6,11 +6,12 @@ import { StorySceneLogic } from "@/story/StorySceneLogic";
 type StoryWorldProps = {
   nearbyId: string | null;
   visited: Set<string>;
+  panelOpen: boolean;
   onNearby: (chapterId: string | null) => void;
   onInteract: (chapterId: string) => void;
 };
 
-export function StoryWorld({ nearbyId, visited, onNearby, onInteract }: StoryWorldProps) {
+export function StoryWorld({ nearbyId, visited, panelOpen, onNearby, onInteract }: StoryWorldProps) {
   return (
     <div className="gp-canvas-wrap">
       <SceneShell
@@ -21,6 +22,7 @@ export function StoryWorld({ nearbyId, visited, onNearby, onInteract }: StoryWor
         <StorySceneLogic
           nearbyId={nearbyId}
           visited={visited}
+          panelOpen={panelOpen}
           onNearby={onNearby}
           onInteract={onInteract}
         />

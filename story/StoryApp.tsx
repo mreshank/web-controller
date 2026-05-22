@@ -7,7 +7,6 @@ import { STORY_CHAPTERS } from "@/story/chapters";
 import { StoryHUD } from "@/story/StoryHUD";
 import { StoryPanel } from "@/story/StoryPanel";
 import { StoryWorld } from "@/story/StoryWorld";
-
 export function StoryApp() {
   const [nearbyId, setNearbyId] = useState<string | null>(null);
   const [activeChapterId, setActiveChapterId] = useState<string | null>(null);
@@ -20,6 +19,9 @@ export function StoryApp() {
 
   const closePanel = useCallback(() => setActiveChapterId(null), []);
 
+  const panelOpen = activeChapterId !== null;
+  const activeChapter = STORY_CHAPTERS.find((c) => c.id === activeChapterId);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") closePanel();
@@ -28,13 +30,12 @@ export function StoryApp() {
     return () => window.removeEventListener("keydown", onKey);
   }, [closePanel]);
 
-  const activeChapter = STORY_CHAPTERS.find((c) => c.id === activeChapterId);
-
   return (
     <Providers>
       <StoryWorld
         nearbyId={nearbyId}
         visited={visited}
+        panelOpen={panelOpen}
         onNearby={setNearbyId}
         onInteract={onInteract}
       />

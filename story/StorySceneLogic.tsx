@@ -14,6 +14,7 @@ const PROXIMITY = 5.5;
 type StorySceneLogicProps = {
   nearbyId: string | null;
   visited: Set<string>;
+  panelOpen: boolean;
   onNearby: (chapterId: string | null) => void;
   onInteract: (chapterId: string) => void;
 };
@@ -21,6 +22,7 @@ type StorySceneLogicProps = {
 export function StorySceneLogic({
   nearbyId,
   visited,
+  panelOpen,
   onNearby,
   onInteract,
 }: StorySceneLogicProps) {
@@ -54,7 +56,7 @@ export function StorySceneLogic({
 
     const s = stateRef.current;
     const pressed = Boolean(s?.connected && s.buttons[0]);
-    if (pressed && !prevButtonRef.current && nearest) {
+    if (!panelOpen && pressed && !prevButtonRef.current && nearest) {
       onInteract(nearest);
     }
     prevButtonRef.current = pressed;

@@ -19,7 +19,7 @@ export function StoryHUD({ nearbyId, visited }: StoryHUDProps) {
         </div>
         <p className="gp-hud__line">
           <strong>Left stick</strong> fly · <strong>Right stick</strong> look ·{" "}
-          <strong>L2/R2</strong> down/up · <strong>×</strong> read beacon
+          <strong>L2/R2</strong> down/up · <strong>×</strong> open · <strong>○</strong> close
         </p>
         {nearby ? (
           <>

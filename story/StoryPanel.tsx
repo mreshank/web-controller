@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { StoryChapter } from "@/story/chapters";
+import { useStoryPanelGamepad } from "@/story/useStoryPanelGamepad";
 
 type StoryPanelProps = {
   chapter: StoryChapter;
@@ -9,6 +10,8 @@ type StoryPanelProps = {
 };
 
 export function StoryPanel({ chapter, onClose }: StoryPanelProps) {
+  useStoryPanelGamepad(true, onClose);
+
   return (
     <div className="gp-modal-backdrop">
       <article
@@ -39,7 +42,7 @@ export function StoryPanel({ chapter, onClose }: StoryPanelProps) {
             </Link>
           ) : null}
           <button type="button" className="gp-btn" onClick={onClose}>
-            Close (Esc)
+            Close (○ or Esc)
           </button>
         </div>
       </article>
