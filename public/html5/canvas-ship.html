@@ -5,37 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Canvas Starship</title>
     <link rel="stylesheet" href="style.css" />
+    <style>
+      #c {
+        width: 100%;
+        max-width: 960px;
+        height: min(70vh, 520px);
+        display: block;
+        margin: 1rem auto;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: #030712;
+      }
+    </style>
   </head>
   <body>
     <div class="wrap">
-      <p><a href="index.html">← HTML5 hub</a></p>
+      <p><a href="index.html">← HTML5 lab</a></p>
       <h1>Twin-stick canvas ship</h1>
       <p id="status">Press any button on your controller</p>
-      <canvas id="c" width="900" height="500"></canvas>
+      <canvas id="c"></canvas>
+      <p style="font-size: 0.75rem; color: #64748b">
+        Left stick · move · Right stick · rotate · R2 · boost
+      </p>
     </div>
     <script src="gamepad.js"></script>
     <script>
       const canvas = document.getElementById("c");
       const ctx = canvas.getContext("2d");
-      const ship = { x: 450, y: 250, a: 0, trail: [] };
-      const stars = Array.from({ length: 120 }, () => ({
-        x: Math.random() * 900,
-        y: Math.random() * 500,
-        z: Math.random(),
-      }));
+      const ship = { x: 0, y: 0, a: 0, trail: [] };
+      const stars = [];
 
-      function draw() {
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * devicePixelRatio;
+        canvas.height = rect.height * devicePixelRatio;
+        ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+        if (!stars.length) {
+          for (let i = 0; i < 150; i++) {
+            stars.push({
+              x: Math.random() * rect.width,
+              y: Math.random() * rect.height,
+              z: Math.random(),
+            });
+          }
+        }
+        ship.x = rect.width / 2;
+        ship.y = rect.height / 2;
+      }
+      window.addEventListener("resize", resize);
+      resize();
+
+      function draw(w, h) {
         ctx.fillStyle = "#030712";
-        ctx.fillRect(0, 0, 900, 500);
+        ctx.fillRect(0, 0, w, h);
         stars.forEach((s) => {
-          ctx.fillStyle = `rgba(255,255,255,${0.2 + s.z * 0.6})`;
+          ctx.fillStyle = `rgba(255,255,255,${0.15 + s.z * 0.5})`;
           ctx.fillRect(s.x, s.y, 1 + s.z * 2, 1 + s.z * 2);
         });
         ship.trail.forEach((t, i) => {
-          ctx.globalAlpha = i / ship.trail.length;
+          ctx.globalAlpha = (i / ship.trail.length) * 0.7;
           ctx.fillStyle = "#38bdf8";
           ctx.beginPath();
-          ctx.arc(t.x, t.y, 2, 0, Math.PI * 2);
+          ctx.arc(t.x, t.y, 2.5, 0, Math.PI * 2);
           ctx.fill();
         });
         ctx.globalAlpha = 1;
@@ -44,34 +75,34 @@
         ctx.rotate(ship.a);
         ctx.fillStyle = "#f97316";
         ctx.beginPath();
-        ctx.moveTo(0, -14);
-        ctx.lineTo(10, 12);
-        ctx.lineTo(0, 8);
-        ctx.lineTo(-10, 12);
+        ctx.moveTo(0, -16);
+        ctx.lineTo(11, 14);
+        ctx.lineTo(0, 9);
+        ctx.lineTo(-11, 14);
         ctx.closePath();
         ctx.fill();
         ctx.restore();
       }
 
       GamepadHTML5.poll((s) => {
-        document.getElementById("status").textContent = s.connected
-          ? s.id
-          : "Connect controller";
+        const st = document.getElementById("status");
+        const w = canvas.getBoundingClientRect().width;
+        const h = canvas.getBoundingClientRect().height;
         if (!s.connected) {
-          draw();
+          st.textContent = "Connect controller & press any button";
+          draw(w, h);
           return;
         }
+        st.textContent = s.id;
         ship.a += s.rx * 0.06;
-        const sp = 4 + (s.buttons[7] ? 6 : 0);
-        ship.x += Math.sin(ship.a) * -s.ly * sp;
-        ship.y += Math.cos(ship.a) * -s.ly * sp;
-        ship.x += Math.cos(ship.a) * s.lx * sp;
-        ship.y += Math.sin(ship.a) * -s.lx * sp;
-        ship.x = Math.max(20, Math.min(880, ship.x));
-        ship.y = Math.max(20, Math.min(480, ship.y));
+        const sp = 4 + s.r2 * 8;
+        ship.x += Math.sin(ship.a) * -s.ly * sp + Math.cos(ship.a) * s.lx * sp;
+        ship.y += Math.cos(ship.a) * -s.ly * sp + Math.sin(ship.a) * -s.lx * sp;
+        ship.x = Math.max(24, Math.min(w - 24, ship.x));
+        ship.y = Math.max(24, Math.min(h - 24, ship.y));
         ship.trail.push({ x: ship.x, y: ship.y });
-        if (ship.trail.length > 40) ship.trail.shift();
-        draw();
+        if (ship.trail.length > 50) ship.trail.shift();
+        draw(w, h);
       });
     </script>
   </body>

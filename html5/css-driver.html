@@ -8,7 +8,7 @@
     <style>
       #stage {
         position: relative;
-        height: 420px;
+        height: min(70vh, 420px);
         margin: 1rem 0;
         border-radius: 12px;
         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -19,29 +19,28 @@
         position: absolute;
         width: 48px;
         height: 48px;
-        left: 50%;
-        top: 50%;
-        margin: -24px;
-        border-radius: 8px;
+        left: 0;
+        top: 0;
+        border-radius: 10px;
         background: linear-gradient(135deg, #f472b6, #a78bfa);
-        box-shadow: 0 0 30px rgba(244, 114, 182, 0.6);
-        transition: background 0.1s;
+        box-shadow: 0 0 24px rgba(244, 114, 182, 0.55);
+        will-change: transform;
       }
       .orb {
         position: absolute;
-        width: 20px;
-        height: 20px;
+        width: 22px;
+        height: 22px;
         border-radius: 50%;
         background: #fde047;
-        box-shadow: 0 0 12px #facc15;
+        box-shadow: 0 0 14px #facc15;
       }
     </style>
   </head>
   <body>
     <div class="wrap">
-      <p><a href="index.html">← HTML5 hub</a></p>
+      <p><a href="index.html">← HTML5 lab</a></p>
       <h1>CSS-only driver</h1>
-      <p>DOM + transform — proof you do not need WebGL to impress a room.</p>
+      <p id="status">Press any button on your controller</p>
       <div id="stage">
         <div id="car"></div>
       </div>
@@ -50,34 +49,50 @@
     <script>
       const stage = document.getElementById("stage");
       const car = document.getElementById("car");
-      let x = 200,
-        y = 200,
-        orbs = [];
-      for (let i = 0; i < 8; i++) {
+      let x = 0;
+      let y = 0;
+      const orbs = [];
+
+      function layout() {
+        x = stage.clientWidth / 2 - 24;
+        y = stage.clientHeight / 2 - 24;
+        car.style.transform = `translate(${x}px,${y}px)`;
+      }
+      layout();
+      window.addEventListener("resize", layout);
+
+      for (let i = 0; i < 10; i++) {
         const o = document.createElement("div");
         o.className = "orb";
-        o.style.left = Math.random() * 360 + 40 + "px";
-        o.style.top = Math.random() * 300 + 40 + "px";
+        o.style.left = 40 + Math.random() * (stage.clientWidth - 80) + "px";
+        o.style.top = 40 + Math.random() * (stage.clientHeight - 80) + "px";
         stage.appendChild(o);
         orbs.push(o);
       }
+
       GamepadHTML5.poll((s) => {
-        if (!s.connected) return;
-        x += s.lx * 6;
-        y += s.ly * 6;
-        x = Math.max(24, Math.min(stage.clientWidth - 48, x));
-        y = Math.max(24, Math.min(stage.clientHeight - 48, y));
-        car.style.transform = `translate(${x}px,${y}px) rotate(${s.rx * 30}deg) scale(${
-          1 + (s.buttons[7] ? 0.3 : 0)
-        })`;
-        if (s.buttons[0]) car.style.background = "linear-gradient(135deg,#38bdf8,#22d3ee)";
-        else car.style.background = "linear-gradient(135deg,#f472b6,#a78bfa)";
+        const st = document.getElementById("status");
+        if (!s.connected) {
+          st.textContent = "Connect controller & press any button";
+          return;
+        }
+        st.textContent = s.id;
+        x += s.lx * 7;
+        y += s.ly * 7;
+        x = Math.max(8, Math.min(stage.clientWidth - 56, x));
+        y = Math.max(8, Math.min(stage.clientHeight - 56, y));
+        const rot = s.rx * 35;
+        const scale = 1 + s.r2 * 0.35;
+        car.style.transform = `translate(${x}px,${y}px) rotate(${rot}deg) scale(${scale})`;
+        car.style.background = s.buttons[0]
+          ? "linear-gradient(135deg,#38bdf8,#22d3ee)"
+          : "linear-gradient(135deg,#f472b6,#a78bfa)";
         orbs.forEach((o) => {
           const ox = parseFloat(o.style.left);
           const oy = parseFloat(o.style.top);
-          if (Math.hypot(x - ox, y - oy) < 28) {
-            o.style.left = Math.random() * 360 + 40 + "px";
-            o.style.top = Math.random() * 300 + 40 + "px";
+          if (Math.hypot(x + 24 - ox, y + 24 - oy) < 32) {
+            o.style.left = 40 + Math.random() * (stage.clientWidth - 80) + "px";
+            o.style.top = 40 + Math.random() * (stage.clientHeight - 80) + "px";
           }
         });
       });

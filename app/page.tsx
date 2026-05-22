@@ -29,7 +29,7 @@ const EXPERIENCES = [
     href: "/html5/index.html",
     title: "HTML5 Lab",
     tag: "Zero build",
-    desc: "Vanilla HTML/CSS/JS. Max ROI. Visualizer, canvas ship, CSS driver, Three CDN.",
+    desc: "Standalone vanilla demos. Best via: cd html5 && npx serve . -p 3333",
     className:
       "border-amber-500/40 bg-gradient-to-br from-amber-950/40 to-slate-900/80 hover:border-amber-400/60",
   },

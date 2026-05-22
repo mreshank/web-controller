@@ -32,7 +32,11 @@ export function StoryApp() {
 
   return (
     <Providers>
-      <StoryWorld onNearby={setNearbyId} onInteract={onInteract} />
+      <StoryWorld
+        nearbyId={nearbyId}
+        onNearby={setNearbyId}
+        onInteract={onInteract}
+      />
       <StoryHUD nearbyId={nearbyId} visited={visited} />
       <ConnectPrompt />
       {activeChapter ? (

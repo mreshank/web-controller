@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Three.js + Gamepad — Standalone</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      body {
+        font-family: system-ui, sans-serif;
+        background: #030712;
+        color: #e2e8f0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      header {
+        width: 100%;
+        max-width: 960px;
+        padding: 1rem 1.25rem;
+      }
+      header a {
+        color: #38bdf8;
+        font-size: 0.85rem;
+      }
+      h1 {
+        font-size: 1.25rem;
+        margin-top: 0.5rem;
+      }
+      #status {
+        font-size: 0.8rem;
+        color: #fbbf24;
+        margin-top: 0.35rem;
+      }
+      #status.ok {
+        color: #4ade80;
+      }
+      #host {
+        flex: 1;
+        width: 100%;
+        min-height: 60vh;
+      }
+      #host canvas {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+      }
+      footer {
+        font-size: 0.7rem;
+        color: #64748b;
+        padding: 0.75rem;
+        text-align: center;
+      }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <a href="index.html">← HTML5 lab</a>
+      <h1>Three.js + Gamepad (standalone)</h1>
+      <p id="status">Plug in controller · press any button</p>
+    </header>
+    <div id="host"></div>
+    <footer>
+      No Next.js · No npm · Open this file via a local server (see README.md)
+    </footer>
+
+    <script type="module">
+      import * as THREE from "three";
+
+      const DEADZONE = 0.1;
+      const dz = (v) => (Math.abs(v) < DEADZONE ? 0 : v);
+
+      function readPad() {
+        const pads = navigator.getGamepads?.() || [];
+        for (let i = 0; i < pads.length; i++) {
+          const gp = pads[i];
+          if (!gp?.connected) continue;
+          return {
+            lx: dz(gp.axes[0] ?? 0),
+            ly: dz(gp.axes[1] ?? 0),
+            rx: dz(gp.axes[2] ?? 0),
+            ry: dz(gp.axes[3] ?? 0),
+            id: gp.id,
+            index: gp.index,
+            cross: gp.buttons[0]?.pressed,
+            r2: gp.buttons[7]?.value ?? 0,
+          };
+        }
+        return null;
+      }
+
+      const host = document.getElementById("host");
+      const status = document.getElementById("status");
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x030712);
+      scene.fog = new THREE.Fog(0x030712, 15, 45);
+
+      const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
+      camera.position.set(0, 4, 9);
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      host.appendChild(renderer.domElement);
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.35));
+      const sun = new THREE.DirectionalLight(0xffffff, 1.1);
+      sun.position.set(8, 12, 6);
+      sun.castShadow = true;
+      scene.add(sun);
+      const rim = new THREE.PointLight(0x38bdf8, 0.8, 30);
+      rim.position.set(-6, 4, -4);
+      scene.add(rim);
+
+      const floor = new THREE.Mesh(
+        new THREE.PlaneGeometry(40, 40),
+        new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.3, roughness: 0.85 })
+      );
+      floor.rotation.x = -Math.PI / 2;
+      floor.receiveShadow = true;
+      scene.add(floor);
+
+      const grid = new THREE.GridHelper(40, 40, 0x334155, 0x1e293b);
+      scene.add(grid);
+
+      const cube = new THREE.Mesh(
+        new THREE.BoxGeometry(1.2, 1.2, 1.2),
+        new THREE.MeshStandardMaterial({
+          color: 0xf97316,
+          emissive: 0xf97316,
+          emissiveIntensity: 0.35,
+          metalness: 0.5,
+          roughness: 0.25,
+        })
+      );
+      cube.castShadow = true;
+      cube.position.y = 0.6;
+      scene.add(cube);
+
+      const stars = new THREE.Points(
+        new THREE.BufferGeometry().setAttribute(
+          "position",
+          new THREE.Float32BufferAttribute(
+            Array.from({ length: 900 }, () => (Math.random() - 0.5) * 80),
+            3
+          )
+        ),
+        new THREE.PointsMaterial({ size: 0.08, color: 0xffffff, transparent: true, opacity: 0.7 })
+      );
+      scene.add(stars);
+
+      const pad = { lx: 0, ly: 0, rx: 0, connected: false };
+
+      function resize() {
+        const w = host.clientWidth;
+        const h = host.clientHeight;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h, false);
+      }
+      window.addEventListener("resize", resize);
+      resize();
+
+      function animate() {
+        requestAnimationFrame(animate);
+
+        const gp = readPad();
+        if (gp) {
+          pad.connected = true;
+          pad.lx = gp.lx;
+          pad.ly = gp.ly;
+          pad.rx = gp.rx;
+          status.textContent = "Connected: " + gp.id;
+          status.className = "ok";
+
+          const speed = 0.12 + gp.r2 * 0.2;
+          cube.position.x += gp.lx * speed;
+          cube.position.z += gp.ly * speed;
+          cube.rotation.y += gp.rx * 0.05;
+          cube.rotation.x += gp.ry * 0.03;
+          const scale = 1 + gp.r2 * 0.8;
+          cube.scale.setScalar(scale);
+          cube.material.color.setHex(gp.cross ? 0x38bdf8 : 0xf97316);
+          cube.material.emissive.setHex(gp.cross ? 0x38bdf8 : 0xf97316);
+        } else {
+          pad.connected = false;
+          status.textContent = "Plug in controller · press any button";
+          status.className = "";
+        }
+
+        cube.position.x = Math.max(-14, Math.min(14, cube.position.x));
+        cube.position.z = Math.max(-14, Math.min(14, cube.position.z));
+        cube.rotation.y += 0.002;
+
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      window.addEventListener("gamepadconnected", () => {
+        status.textContent = "Controller detected — press a button";
+      });
+    </script>
+  </body>
+</html>

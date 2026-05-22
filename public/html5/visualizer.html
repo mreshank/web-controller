@@ -8,52 +8,119 @@
     <style>
       .grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 0.75rem;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
         margin-top: 1rem;
+        max-width: 480px;
       }
-      .meter {
-        height: 6px;
+      .axis label {
+        font-size: 0.75rem;
+        color: #94a3b8;
+      }
+      .axis .val {
+        font-variant-numeric: tabular-nums;
+        font-size: 0.85rem;
+        color: #e2e8f0;
+      }
+      .bar {
+        height: 10px;
+        margin-top: 0.35rem;
         background: #1e293b;
-        border-radius: 3px;
+        border-radius: 5px;
+        position: relative;
         overflow: hidden;
       }
-      .meter i {
-        display: block;
-        height: 100%;
+      .bar .mid {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #475569;
+        transform: translateX(-50%);
+      }
+      .bar .fill {
+        position: absolute;
+        top: 0;
+        bottom: 0;
         background: linear-gradient(90deg, #38bdf8, #a78bfa);
-        width: 50%;
-        transform-origin: left;
+        border-radius: 5px;
+      }
+      #slots {
+        margin-top: 1.5rem;
+        font-size: 0.75rem;
+        color: #64748b;
       }
     </style>
   </head>
   <body>
     <div class="wrap">
-      <p><a href="index.html">← HTML5 hub</a></p>
-      <h1>Live pad visualizer</h1>
+      <p><a href="index.html">← HTML5 lab</a></p>
+      <h1>Live gamepad visualizer</h1>
+      <p id="status">Press any button after plugging in</p>
       <div class="grid" id="axes"></div>
-      <pre id="btns" style="font-size: 0.7rem; color: #94a3b8"></pre>
+      <pre id="btns" style="font-size: 0.75rem; color: #94a3b8; margin-top: 1rem"></pre>
+      <pre id="slots"></pre>
     </div>
     <script src="gamepad.js"></script>
     <script>
+      const labels = [
+        ["LX", "lx"],
+        ["LY", "ly"],
+        ["RX", "rx"],
+        ["RY", "ry"],
+      ];
       const axesEl = document.getElementById("axes");
-      const labels = ["LX", "LY", "RX", "RY"];
-      labels.forEach((l) => {
-        const d = document.createElement("div");
-        d.innerHTML = `<div>${l}</div><div class="meter"><i id="m-${l}"></i></div>`;
-        axesEl.appendChild(d);
+      labels.forEach(([label]) => {
+        const div = document.createElement("div");
+        div.className = "axis";
+        div.innerHTML = `
+          <label>${label}</label>
+          <span class="val" id="v-${label}">0.00</span>
+          <div class="bar"><span class="mid"></span><span class="fill" id="b-${label}"></span></div>`;
+        axesEl.appendChild(div);
       });
+
+      function setAxis(label, v) {
+        document.getElementById("v-" + label).textContent = v.toFixed(2);
+        const fill = document.getElementById("b-" + label);
+        const pct = Math.min(1, Math.abs(v)) * 50;
+        if (v >= 0) {
+          fill.style.left = "50%";
+          fill.style.width = pct + "%";
+        } else {
+          fill.style.left = 50 - pct + "%";
+          fill.style.width = pct + "%";
+        }
+      }
+
       GamepadHTML5.poll((s) => {
-        if (!s.connected) return;
-        ["LX", "LY", "RX", "RY"].forEach((l, i) => {
-          const v = [s.lx, s.ly, s.rx, s.ry][i];
-          const bar = document.getElementById("m-" + l);
-          bar.style.transform = `scaleX(${Math.abs(v)})`;
-          bar.style.marginLeft = v < 0 ? (1 - Math.abs(v)) * 100 + "%" : "50%";
-        });
+        const st = document.getElementById("status");
+        if (!s.connected) {
+          st.textContent = "No controller — plug in & press any button";
+          st.style.color = "#fbbf24";
+          return;
+        }
+        st.textContent = "Connected: " + s.id + " (slot " + s.index + ")";
+        st.style.color = "#4ade80";
+        setAxis("LX", s.lx);
+        setAxis("LY", s.ly);
+        setAxis("RX", s.rx);
+        setAxis("RY", s.ry);
+        const pressed = s.buttons
+          .map((b, i) => (b ? i : null))
+          .filter((x) => x !== null);
         document.getElementById("btns").textContent =
-          "Buttons: " +
-          s.buttons.map((b, i) => (b ? i : null)).filter((x) => x !== null).join(", ");
+          "Buttons pressed: " + (pressed.length ? pressed.join(", ") : "none");
+        if (navigator.getGamepads) {
+          const lines = [];
+          navigator.getGamepads().forEach((p, i) => {
+            if (p?.connected) lines.push(`  slot ${i}: ${p.id}`);
+          });
+          document.getElementById("slots").textContent = lines.length
+            ? "All connected:\n" + lines.join("\n")
+            : "";
+        }
       });
     </script>
   </body>
