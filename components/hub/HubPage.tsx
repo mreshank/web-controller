@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useRef } from "react";
+import { HubPresenterTools } from "@/components/hub/HubPresenterTools";
 
 const EXPERIENCES = [
   {
@@ -32,14 +33,6 @@ const EXPERIENCES = [
     desc: "Vanilla HTML/CSS/JS. Same API, no framework — maximum ROI per line.",
     mod: "gp-card--html5",
   },
-] as const;
-
-const TOOLS = [
-  { href: "/stage", label: "Stage hub" },
-  { href: "/rehearse", label: "Rehearsal" },
-  { href: "/code", label: "Code" },
-  { href: "/naive", label: "Naive loops" },
-  { href: "/backup", label: "Backup" },
 ] as const;
 
 export function HubPage() {
@@ -98,16 +91,7 @@ export function HubPage() {
             ))}
           </ul>
 
-          <section style={{ marginTop: "3rem" }}>
-            <p className="gp-section-label">Presenter tools</p>
-            <div className="gp-chips">
-              {TOOLS.map((t) => (
-                <Link key={t.href} href={t.href} className="gp-chip">
-                  {t.label}
-                </Link>
-              ))}
-            </div>
-          </section>
+          <HubPresenterTools />
 
           <p
             className="gp-mono"

@@ -1369,6 +1369,130 @@
   pointer-events: none;
 }
 
+/* —— Nexus Breach (/play) —— */
+.gp-play-hud {
+  max-width: 22rem;
+}
+
+.gp-play-codename {
+  font-family: var(--gp-font-mono);
+  font-size: 0.72rem;
+  color: var(--gp-accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.gp-play-lobby {
+  margin-top: 1rem;
+  max-height: 9rem;
+  overflow-y: auto;
+}
+
+.gp-play-roster {
+  list-style: none;
+  margin: 0.35rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.gp-play-roster li {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.35rem;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(56, 189, 248, 0.12);
+}
+
+.gp-play-roster li.is-you {
+  border-color: rgba(249, 115, 22, 0.45);
+}
+
+.gp-play-roster__name {
+  font-family: var(--gp-font-mono);
+  letter-spacing: 0.08em;
+}
+
+.gp-play-roster__meta {
+  color: var(--gp-text-faint);
+  font-size: 0.65rem;
+}
+
+.gp-play-backdrop {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 30%, #1a2d4a 0%, #030712 65%);
+}
+
+.gp-play-backdrop__grid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(56, 189, 248, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+}
+
+.gp-play-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(3, 7, 18, 0.82);
+  backdrop-filter: blur(6px);
+}
+
+.gp-play-modal {
+  width: min(22rem, 92vw);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  background: rgba(15, 23, 42, 0.95);
+}
+
+.gp-play-input {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.65rem 0.75rem;
+  font-family: var(--gp-font-mono);
+  font-size: 0.9rem;
+  color: var(--gp-text);
+  background: rgba(3, 7, 18, 0.8);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 0.4rem;
+}
+
+.gp-play-error {
+  margin-top: 0.5rem;
+  font-size: 0.78rem;
+  color: #fb7185;
+}
+
+.gp-play-verdict {
+  margin-top: 0.75rem;
+  padding: 0.65rem;
+  border-radius: 0.4rem;
+  background: rgba(167, 139, 250, 0.08);
+  border: 1px solid rgba(167, 139, 250, 0.25);
+  font-size: 0.78rem;
+}
+
+.gp-play-verdict ol {
+  margin: 0.4rem 0 0;
+  padding-left: 1.1rem;
+}
+
+.gp-play-admin-unlock {
+  margin-top: 0.5rem;
+  font-size: 0.72rem;
+  color: var(--gp-text-faint);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
