@@ -5,10 +5,15 @@ export const gameState = {
   scores: {} as Record<number, number>,
   orbsCollected: 0,
   boostPadsHit: 0,
+  totalOrbs: orbDefs.length,
 };
 
 export function orbScoreForId(id: number): number {
   return orbDefs[id]?.golden ? GOLDEN_ORB_VALUE : ORB_VALUE;
+}
+
+export function applyScoreDelta(slot: number, delta: number) {
+  gameState.scores[slot] = Math.max(0, (gameState.scores[slot] ?? 0) + delta);
 }
 
 export function resetGameState() {
@@ -18,7 +23,6 @@ export function resetGameState() {
 }
 
 export function addBoostPadScore(slot: number) {
-  gameState.scores[slot] = (gameState.scores[slot] ?? 0) + BOOST_PAD_VALUE;
+  applyScoreDelta(slot, BOOST_PAD_VALUE);
   gameState.boostPadsHit += 1;
-  window.dispatchEvent(new CustomEvent("game-score"));
 }

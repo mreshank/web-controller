@@ -1,12 +1,12 @@
 "use client";
 
+import { memo, useMemo } from "react";
 import { SceneShell } from "@/components/shared/SceneShell";
 import { PLAYER_COLORS } from "@/game/config";
 import { GameCamera } from "@/game/GameCamera";
 import { PlayerRover } from "@/game/PlayerRover";
 import { WorldEnvironment } from "@/game/WorldEnvironment";
-import { Orb } from "@/game/Orb";
-import { orbDefs } from "@/game/orbs";
+import { OrbsField } from "@/game/OrbsField";
 import { useConnectedSlotIndexes } from "@/hooks/useGamepad";
 
 const SPAWNS: Array<[number, number, number]> = [
@@ -16,17 +16,21 @@ const SPAWNS: Array<[number, number, number]> = [
   [8, 0, 8],
 ];
 
-export function GameArena() {
+function GameArenaInner() {
   const connected = useConnectedSlotIndexes();
-  const slots = connected.length > 0 ? connected : [0];
+  const slots = useMemo(
+    () => (connected.length > 0 ? connected : [0]),
+    [connected.join(",")]
+  );
   const cameraSlot = slots[0] ?? 0;
 
   return (
     <div className="gp-canvas-wrap">
       <SceneShell
-        camera={{ position: [0, 14, 18], fov: 52 }}
+        camera={{ position: [0, 14, 18], fov: 54 }}
         showGrid={false}
         showStars={false}
+        dpr={[1, 1.5]}
       >
         <WorldEnvironment />
         {slots.map((slot, i) => (
@@ -37,11 +41,11 @@ export function GameArena() {
             spawn={SPAWNS[slot] ?? SPAWNS[i]!}
           />
         ))}
-        {orbDefs.map((def, id) => (
-          <Orb key={id} id={id} def={def} />
-        ))}
+        <OrbsField />
         <GameCamera controlSlot={cameraSlot} />
       </SceneShell>
     </div>
   );
 }
+
+export const GameArena = memo(GameArenaInner);

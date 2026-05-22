@@ -10,6 +10,7 @@ type SceneShellProps = {
   showGrid?: boolean;
   showStars?: boolean;
   className?: string;
+  dpr?: number | [number, number];
 };
 
 export function SceneShell({
@@ -18,9 +19,10 @@ export function SceneShell({
   showGrid = true,
   showStars = false,
   className = "touch-none",
+  dpr,
 }: SceneShellProps) {
   return (
-    <Canvas shadows camera={camera} className={className}>
+    <Canvas shadows camera={camera} className={className} dpr={dpr}>
       <color attach="background" args={["#030712"]} />
       <ambientLight intensity={0.35} />
       <directionalLight

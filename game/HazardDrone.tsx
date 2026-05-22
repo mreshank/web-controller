@@ -3,6 +3,7 @@
 import { useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
+import { hitHazard } from "@/game/game-rules";
 import { hazardPaths } from "@/game/world-layout";
 import { terrainHeight } from "@/game/terrain";
 import { playerPositions } from "@/game/player-registry";
@@ -12,6 +13,8 @@ type HazardDroneProps = {
   color?: string;
   speed?: number;
 };
+
+const hitCooldown = new Map<string, number>();
 
 export function HazardDrone({
   pathIndex,
@@ -35,24 +38,24 @@ export function HazardDrone({
 
   useFrame((_, delta) => {
     if (!groupRef.current || !path) return;
-    tRef.current = (tRef.current + delta * speed) % 1;
+    const dt = Math.min(delta, 0.033);
+    tRef.current = (tRef.current + dt * speed) % 1;
     const t = tRef.current;
     const ping = t < 0.5 ? t * 2 : 2 - t * 2;
     groupRef.current.position.lerpVectors(path.a, path.b, ping);
-    groupRef.current.rotation.y += delta * 2;
+    groupRef.current.rotation.y += dt * 2;
 
+    const now = performance.now();
     playerPositions.forEach((p, slot) => {
       const dx = p.x - groupRef.current!.position.x;
       const dy = p.y - groupRef.current!.position.y;
       const dz = p.z - groupRef.current!.position.z;
-      if (dx * dx + dy * dy + dz * dz < 2.2) {
-        const knock = 8;
-        p.x += dx * knock * delta;
-        p.z += dz * knock * delta;
-        window.dispatchEvent(
-          new CustomEvent("game-hazard", { detail: { slot } })
-        );
-      }
+      if (dx * dx + dy * dy + dz * dz > 2.8) return;
+
+      const key = `${pathIndex}-${slot}`;
+      if ((hitCooldown.get(key) ?? 0) > now) return;
+      hitCooldown.set(key, now + 900);
+      hitHazard(slot);
     });
   });
 
@@ -61,21 +64,20 @@ export function HazardDrone({
   return (
     <group ref={groupRef}>
       <mesh castShadow>
-        <octahedronGeometry args={[0.55, 0]} />
+        <octahedronGeometry args={[0.65, 0]} />
         <meshStandardMaterial
           color={color}
           emissive={color}
-          emissiveIntensity={1.4}
+          emissiveIntensity={2}
           metalness={0.5}
           roughness={0.2}
-          wireframe
+          toneMapped={false}
         />
       </mesh>
       <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[0.9, 0.04, 8, 24]} />
-        <meshBasicMaterial color={color} transparent opacity={0.5} />
+        <torusGeometry args={[1.05, 0.06, 8, 28]} />
+        <meshBasicMaterial color={color} transparent opacity={0.65} toneMapped={false} />
       </mesh>
-      <pointLight color={color} intensity={0.6} distance={6} />
     </group>
   );
 }
