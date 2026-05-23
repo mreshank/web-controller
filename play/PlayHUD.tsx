@@ -4,24 +4,23 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { PLAY_RANKS } from "@/lib/play/constants";
 import type { PlayIdentity } from "@/lib/play/identity";
-import type { PlaySocketState } from "@/hooks/usePlaySocket";
-import type { RoomSnapshot } from "@/lib/play/simulation";
+import type { PlayHudState } from "@/hooks/usePlaySocket";
 
 type PlayHUDProps = {
   identity: PlayIdentity;
-  socket: PlaySocketState;
+  hud: PlayHudState;
 };
 
-function phaseLabel(room: RoomSnapshot | null): string {
-  if (!room) return "Linking to breach network…";
-  switch (room.phase) {
+function phaseLabel(meta: PlayHudState["roomMeta"]): string {
+  if (!meta) return "Linking to breach network…";
+  switch (meta.phase) {
     case "waiting":
-      return `Staging breach · ${room.players.length}/4 runners`;
+      return `Staging breach · ${meta.playerCount}/4 runners`;
     case "countdown":
       return "Breach opens in…";
     case "live": {
-      const left = Math.max(0, Math.ceil((room.phaseEndsAt - Date.now()) / 1000));
-      return `${room.chapterTitle} · ${left}s`;
+      const left = Math.max(0, Math.ceil((meta.phaseEndsAt - Date.now()) / 1000));
+      return `${meta.chapterTitle} · ${left}s`;
     }
     case "verdict":
       return "Vault verdict";
@@ -30,8 +29,8 @@ function phaseLabel(room: RoomSnapshot | null): string {
   }
 }
 
-export function PlayHUD({ identity, socket }: PlayHUDProps) {
-  const { room, online, queue, toast, verdict, connected, error } = socket;
+export function PlayHUD({ identity, hud }: PlayHUDProps) {
+  const { roomMeta, localStats, online, queue, toast, verdict, connected, error } = hud;
   const [toastVisible, setToastVisible] = useState(false);
 
   useEffect(() => {
@@ -41,8 +40,6 @@ export function PlayHUD({ identity, socket }: PlayHUDProps) {
     return () => clearTimeout(t);
   }, [toast?.text, toast?.color]);
 
-  const local = room?.players.find((p) => p.uid === identity.uid);
-
   return (
     <>
       <div className="gp-hud gp-hud--game gp-play-hud">
@@ -51,25 +48,26 @@ export function PlayHUD({ identity, socket }: PlayHUDProps) {
           <span className="gp-play-codename">{identity.codename}</span>
         </div>
         <p className="gp-hud__meta gp-game-mission">
-          {room?.chapterBlurb ??
+          {roomMeta?.chapterBlurb ??
             "Online vault heist — relics, rank, and breach tax. Minimum 2 runners to open a room."}
         </p>
         <p className="gp-hud__line" style={{ marginTop: "0.5rem", fontSize: "0.88rem" }}>
-          {phaseLabel(room)}
+          {phaseLabel(roomMeta)}
         </p>
-        {room?.phase === "live" && local ? (
+        {roomMeta?.phase === "live" && localStats ? (
           <p className="gp-hud__line" style={{ marginTop: "0.45rem" }}>
             <span style={{ color: "#f97316" }}>
-              {PLAY_RANKS[local.rank]} · {local.score} pts
+              {PLAY_RANKS[localStats.rank]} · {localStats.score} pts
             </span>
             {" · "}
-            streak {local.streak.toFixed(1)} · relics {local.relics} · shields ♥{local.shields}
-            {local.penaltyDebt > 0 ? ` · tax debt ${local.penaltyDebt}` : ""}
+            streak {localStats.streak.toFixed(1)} · relics {localStats.relics} · shields ♥
+            {localStats.shields}
+            {localStats.penaltyDebt > 0 ? ` · tax debt ${localStats.penaltyDebt}` : ""}
           </p>
         ) : null}
-        {room ? (
+        {roomMeta ? (
           <p className="gp-hud__meta" style={{ marginTop: "0.35rem" }}>
-            {room.collectedOrbs.length}/{room.orbTotal} relics · team vault {room.teamRelics}
+            {roomMeta.orbCollected}/{roomMeta.orbTotal} relics · team vault {roomMeta.teamRelics}
           </p>
         ) : null}
         {toast && toastVisible ? (
@@ -118,7 +116,7 @@ export function PlayHUD({ identity, socket }: PlayHUDProps) {
         ) : null}
         <p className="gp-hud__meta" style={{ marginTop: "0.65rem", lineHeight: 1.5 }}>
           <strong>Left stick</strong> move · <strong>Right stick</strong> orbit · <strong>R2</strong>{" "}
-          sprint · <strong>×</strong> dash · golden relics raise rank · drones inflict breach tax
+          sprint · <strong>×</strong> dash
         </p>
       </div>
       <div className="gp-chrome">

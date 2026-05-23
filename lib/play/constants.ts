@@ -3,8 +3,8 @@ export const PLAY_MAX_PLAYERS = 4;
 export const PLAY_COUNTDOWN_MS = 5000;
 export const PLAY_MATCH_MS = 180_000;
 export const PLAY_TICK_HZ = 20;
-export const PLAY_ORB_COUNT = 32;
-export const PLAY_GOLDEN_ORBS = 5;
+export const PLAY_ORB_COUNT = 24;
+export const PLAY_GOLDEN_ORBS = 4;
 
 export const PLAY_WORLD_HALF = 48;
 

@@ -28,18 +28,24 @@ export function PlayApp() {
     };
   }, []);
 
-  const { state } = usePlaySocket(sendInput);
+  const { hud } = usePlaySocket(sendInput);
+  const meta = hud.roomMeta;
 
   return (
     <Providers>
-      {state.room ? (
-        <PlayArena room={state.room} localUid={identity.uid} />
+      {meta ? (
+        <PlayArena
+          key={meta.roomId}
+          roomId={meta.roomId}
+          seed={meta.seed}
+          localUid={identity.uid}
+        />
       ) : (
         <div className="gp-play-backdrop" aria-hidden>
           <div className="gp-play-backdrop__grid" />
         </div>
       )}
-      <PlayHUD identity={identity} socket={state} />
+      <PlayHUD identity={identity} hud={hud} />
       <ConnectPrompt
         title="Connect a controller"
         body="Nexus Breach is built for gamepads. Press any button on your controller after connecting."

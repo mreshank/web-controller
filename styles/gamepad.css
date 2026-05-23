@@ -309,7 +309,6 @@
 }
 
 .gp-card:hover {
-  transform: translateY(-3px) translateZ(8px);
   border-color: var(--gp-border-strong);
   box-shadow: var(--gp-shadow);
 }
