@@ -44,7 +44,7 @@ export type PlayHudState = {
   error: string | null;
 };
 
-const HUD_INTERVAL_MS = 250;
+const HUD_INTERVAL_MS = 500;
 
 function buildHudFromRoom(
   room: RoomSnapshot | null,
@@ -92,6 +92,7 @@ export function usePlaySocket(sendInput: () => ClientMessage | null) {
   const wsRef = useRef<WebSocket | null>(null);
   const identityRef = useRef(getOrCreatePlayIdentity());
   const hudDirtyRef = useRef(true);
+  const roomIdRef = useRef<string | null>(null);
 
   const flushHud = useCallback(() => {
     if (!hudDirtyRef.current) return;
@@ -140,11 +141,14 @@ export function usePlaySocket(sendInput: () => ClientMessage | null) {
         case "room":
           setPlayRoom(msg.snapshot);
           hudDirtyRef.current = true;
-          setHud((s) => ({
-            ...s,
-            ...buildHudFromRoom(msg.snapshot, uid),
-            verdict: null,
-          }));
+          if (roomIdRef.current !== msg.snapshot.roomId) {
+            roomIdRef.current = msg.snapshot.roomId;
+            setHud((s) => ({
+              ...s,
+              ...buildHudFromRoom(msg.snapshot, uid),
+              verdict: null,
+            }));
+          }
           break;
         case "toast":
           setHud((s) => ({
@@ -165,6 +169,7 @@ export function usePlaySocket(sendInput: () => ClientMessage | null) {
 
     ws.onclose = () => {
       setPlayRoom(null);
+      roomIdRef.current = null;
       setHud((s) => ({ ...s, connected: false, roomMeta: null, localStats: null }));
       wsRef.current = null;
     };
@@ -185,7 +190,7 @@ export function usePlaySocket(sendInput: () => ClientMessage | null) {
       if (!ws || ws.readyState !== WebSocket.OPEN) return;
       const payload = sendInput();
       if (payload) ws.send(JSON.stringify(payload));
-    }, 1000 / 15);
+    }, 1000 / 20);
     return () => clearInterval(id);
   }, [sendInput]);
 

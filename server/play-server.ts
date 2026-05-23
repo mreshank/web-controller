@@ -140,13 +140,9 @@ function onDisconnect(ws: WebSocket) {
 
 const roomInputs = new Map<string, Map<string, PlayInput>>();
 
-let broadcastTick = 0;
-
 function tickAll() {
   const now = Date.now();
   const dt = 1 / PLAY_TICK_HZ;
-  broadcastTick += 1;
-  const sendSnapshots = broadcastTick % 2 === 0;
 
   for (const room of rooms.values()) {
     const inputs = roomInputs.get(room.roomId) ?? new Map();
@@ -157,9 +153,7 @@ function tickAll() {
 
     for (const c of clients.values()) {
       if (c.roomId !== room.roomId) continue;
-      if (sendSnapshots) {
-        send(c.ws, { type: "room", snapshot: snapshotRoom(room) });
-      }
+      send(c.ws, { type: "room", snapshot: snapshotRoom(room) });
       for (const t of toasts) {
         send(c.ws, { type: "toast", text: t.text, color: t.color });
       }
