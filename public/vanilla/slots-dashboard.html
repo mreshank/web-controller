@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Slots Dashboard — Vanilla Lab</title>
-    <link rel="stylesheet" href="https://static.mreshank.com/gamepad/styles.css" />
+    <link rel="stylesheet" href="/gamepad/styles.css" data-gp-styles="1" />
     <style>
       .dash {
         display: grid;
@@ -47,15 +47,15 @@
       }
     </style>
   </head>
-  <body class="gp-root gp-vanilla">
+  <body class="gp-root gp-vanilla gp-vanilla--chromed">
     <div class="gp-wrap" style="max-width: 56rem">
-      <a href="index.html" class="gp-btn gp-btn--ghost" style="display: inline-flex; margin-bottom: 1rem">← Lab</a>
       <h1 class="gp-heading">Slots Dashboard</h1>
       <p class="gp-lead">Scan indices 0–3 every frame — connection order ≠ slot order.</p>
       <div class="dash" id="dash"></div>
     </div>
     <script src="/html5/gamepad.js"></script>
     <script src="vanilla.js"></script>
+    <script>VanillaLab.initPage({ title: "Slots Dashboard" });</script>
     <script>
       const dash = document.getElementById("dash");
       const slots = [0, 1, 2, 3].map((i) => {

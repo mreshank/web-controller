@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Page Deck — Vanilla Lab</title>
-    <link rel="stylesheet" href="https://static.mreshank.com/gamepad/styles.css" />
+    <link rel="stylesheet" href="/gamepad/styles.css" data-gp-styles="1" />
     <style>
       html, body { margin: 0; height: 100%; overflow: hidden; }
       .slide {
@@ -46,7 +46,7 @@
       }
     </style>
   </head>
-  <body class="gp-root gp-vanilla">
+  <body class="gp-root gp-vanilla gp-vanilla--chromed">
     <div class="slide is-on" data-i="0">
       <div>
         <h2>Controller-native slides</h2>
@@ -68,12 +68,13 @@
     <div class="slide" data-i="3">
       <div>
         <h2>Thank you</h2>
-        <p><a href="index.html" style="color: var(--gp-accent)">Back to lab</a></p>
+        <p class="gp-mono">Start → Hub · Select → Lab · ○ back</p>
       </div>
     </div>
     <p class="ui gp-mono">← → sticks · slide <span id="n">1</span>/4</p>
     <script src="/html5/gamepad.js"></script>
     <script src="vanilla.js"></script>
+    <script>VanillaLab.initPage({ title: "Page Deck" });</script>
     <script>
       const slides = [...document.querySelectorAll(".slide")];
       const num = document.getElementById("n");

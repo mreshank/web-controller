@@ -3,6 +3,15 @@ import type { NextConfig } from "next";
 const playWsPort = process.env.PLAY_WS_PORT ?? "3001";
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        source: "/vanilla/index.html",
+        destination: "/vanilla",
+        permanent: false,
+      },
+    ];
+  },
   async rewrites() {
     return [
       {

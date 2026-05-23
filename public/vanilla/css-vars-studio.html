@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>CSS Variables Studio — Vanilla Lab</title>
-    <link rel="stylesheet" href="https://static.mreshank.com/gamepad/styles.css" />
+    <link rel="stylesheet" href="/gamepad/styles.css" data-gp-styles="1" />
     <style>
       :root {
         --hue: 18;
@@ -37,9 +37,8 @@
       }
     </style>
   </head>
-  <body class="gp-root gp-vanilla">
+  <body class="gp-root gp-vanilla gp-vanilla--chromed">
     <div class="gp-wrap">
-      <a href="index.html" class="gp-btn gp-btn--ghost" style="display: inline-flex; margin-bottom: 1rem">← Lab</a>
       <h1 class="gp-heading">CSS Variables Studio</h1>
       <p class="gp-lead">Sticks write to <code class="gp-mono">:root</code> — designers own the look, JS only feeds numbers.</p>
       <div class="preview" id="preview">Live theme</div>
@@ -48,6 +47,7 @@
     </div>
     <script src="/html5/gamepad.js"></script>
     <script src="vanilla.js"></script>
+    <script>VanillaLab.initPage({ title: "CSS Variables Studio" });</script>
     <script>
       const root = document.documentElement;
       const readout = document.getElementById("readout");

@@ -403,6 +403,186 @@
 .gp-vanilla .gp-wrap {
   width: min(52rem, 100%);
   margin-inline: auto;
+  display: flex;
+  gap: 8px;
+  justify-content: start;
+  align-items: center;
+}
+
+.gp-vanilla--chromed {
+  padding-top: 5.5rem;
+}
+
+.gp-page.gp-vanilla--chromed {
+  padding-top: 6.25rem;
+}
+
+.gp-vanilla-chrome {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--gp-z-chrome);
+  border-bottom: 1px solid var(--gp-border);
+  background: rgba(3, 4, 8, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.gp-vanilla-chrome__inner {
+  width: min(1120px, 100% - 2rem);
+  margin-inline: auto;
+  padding: 0.65rem 1rem 0.75rem;
+}
+
+.gp-vanilla-chrome__crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--gp-font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+}
+
+.gp-vanilla-chrome__crumb {
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--gp-radius-sm);
+  border: 1px solid transparent;
+  color: var(--gp-vanilla);
+  text-decoration: none;
+  transition:
+    border-color var(--gp-dur) var(--gp-ease),
+    background var(--gp-dur) var(--gp-ease),
+    box-shadow var(--gp-dur) var(--gp-ease);
+}
+
+.gp-vanilla-chrome__crumb:hover,
+.gp-vanilla-chrome__crumb.is-focus {
+  border-color: rgba(255, 107, 53, 0.45);
+  background: var(--gp-vanilla-dim);
+  box-shadow: 0 0 16px rgba(255, 107, 53, 0.2);
+  color: #fff;
+}
+
+.gp-vanilla-chrome__sep {
+  color: var(--gp-text-faint);
+}
+
+.gp-vanilla-chrome__current {
+  color: var(--gp-text-muted);
+  padding: 0.25rem 0.35rem;
+}
+
+.gp-vanilla-chrome__status {
+  margin: 0.4rem 0 0;
+  font-family: var(--gp-font-mono);
+  font-size: 0.72rem;
+  color: var(--gp-warn);
+}
+
+.gp-vanilla-chrome__status.is-ok {
+  color: var(--gp-vanilla);
+}
+
+.gp-vanilla-chrome__hint {
+  margin: 0.35rem 0 0;
+  font-family: var(--gp-font-mono);
+  font-size: 0.62rem;
+  color: var(--gp-text-faint);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.65rem;
+}
+
+.gp-vanilla-chrome__pill {
+  display: inline-block;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 107, 53, 0.35);
+  color: var(--gp-vanilla);
+  font-size: 0.58rem;
+}
+
+.gp-vanilla .gp-badge {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  font-family: var(--gp-font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gp-vanilla);
+  background: var(--gp-vanilla-dim);
+  border: 1px solid rgba(255, 107, 53, 0.25);
+}
+
+.gp-vanilla .gp-serve {
+  margin: 1rem 0;
+  padding: 0.85rem 1rem;
+  border-radius: var(--gp-radius);
+  border: 1px solid rgba(255, 107, 53, 0.22);
+  background: var(--gp-vanilla-dim);
+  font-size: 0.78rem;
+  color: #ffc9a8;
+}
+
+.gp-vanilla .gp-card-grid--lab {
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 900px) {
+  .gp-vanilla .gp-card-grid--lab {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.gp-vanilla a.gp-card.is-focus,
+.gp-vanilla .gp-card.is-focus {
+  border-color: rgba(255, 107, 53, 0.55);
+  box-shadow:
+    0 0 0 1px rgba(255, 107, 53, 0.25),
+    0 12px 40px rgba(255, 107, 53, 0.15);
+  transform: translateY(-2px);
+}
+
+.gp-vanilla-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--gp-border);
+  font-family: var(--gp-font-mono);
+  font-size: 0.72rem;
+}
+
+.gp-vanilla-footer__link {
+  color: var(--gp-text-muted);
+  text-decoration: none;
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--gp-radius-sm);
+  border: 1px solid transparent;
+  transition: all var(--gp-dur) var(--gp-ease);
+}
+
+.gp-vanilla-footer__link:hover,
+.gp-vanilla-footer__link.is-focus {
+  color: var(--gp-vanilla);
+  border-color: rgba(255, 107, 53, 0.35);
+  background: var(--gp-vanilla-dim);
+}
+
+.gp-vanilla-footer__link--html5 {
+  color: var(--gp-html5);
+}
+
+.gp-vanilla-footer__link--html5:hover,
+.gp-vanilla-footer__link--html5.is-focus {
+  color: #e8ff6a;
+  border-color: rgba(200, 255, 0, 0.35);
+  background: rgba(200, 255, 0, 0.08);
 }
 
 /* ─── Chips / toolbar links ──────────────────────────────────────────── */

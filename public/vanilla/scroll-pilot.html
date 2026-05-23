@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Scroll Pilot — Vanilla Lab</title>
-    <link rel="stylesheet" href="https://static.mreshank.com/gamepad/styles.css" />
+    <link rel="stylesheet" href="/gamepad/styles.css" data-gp-styles="1" />
     <style>
       .gp-vanilla-section {
         min-height: 85vh;
@@ -26,10 +26,7 @@
       }
     </style>
   </head>
-  <body class="gp-root gp-vanilla">
-    <p class="gp-mono" style="position: fixed; top: 0.75rem; left: 1rem; z-index: 10; font-size: 0.7rem">
-      <a href="index.html" style="color: var(--gp-accent)">← Lab</a> · Right stick scroll · L/R bumpers snap section
-    </p>
+  <body class="gp-root gp-vanilla gp-vanilla--chromed">
     <section class="gp-vanilla-section is-active" data-i="0">
       <h2>01 — Long-form without a wheel</h2>
       <p class="gp-lead">Right stick feeds <code class="gp-mono">scrollBy</code>. Great for docs, portfolios, museum kiosks.</p>
@@ -47,6 +44,8 @@
       <p class="gp-lead">~40 lines of JS. No framework required.</p>
     </section>
     <script src="/html5/gamepad.js"></script>
+    <script src="vanilla.js"></script>
+    <script>VanillaLab.initPage({ title: "Scroll Pilot" });</script>
     <script>
       const sections = [...document.querySelectorAll(".gp-vanilla-section")];
       let active = 0;

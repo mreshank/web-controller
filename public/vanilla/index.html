@@ -10,9 +10,9 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="https://static.mreshank.com/gamepad/styles.css" />
+    <link rel="stylesheet" href="/gamepad/styles.css" data-gp-styles="1" />
   </head>
-  <body class="gp-root gp-vanilla">
+  <body class="gp-root gp-vanilla gp-vanilla--chromed">
     <div class="gp-wrap">
       <p class="gp-badge">Vanilla Web Dev Lab</p>
       <h1 class="gp-display" style="font-size: clamp(1.5rem, 4vw, 2.1rem)">
@@ -21,18 +21,16 @@
       <p class="gp-lead">
         Nine minimal demos — same Gamepad API, zero React. Each file is one product
         pattern: focus UI, scroll, CSS variables, drawing, media remote, and more.
+        Stick picks a card · × opens · Start → Hub · Select → Lab.
       </p>
       <div class="gp-serve">
         <code class="gp-mono">npx --yes serve . -p 3340</code> or
-        <a href="http://localhost:3000/vanilla/">localhost:3000/vanilla</a>
+        <a href="/vanilla">localhost:3000/vanilla</a>
       </div>
-      <p id="status" class="gp-mono" style="font-size: 0.8rem; color: var(--gp-warn)">
-        Press any button on your controller…
-      </p>
 
-      <div class="gp-card-grid" style="margin-top: 1.5rem">
+      <div class="gp-card-grid gp-card-grid--lab">
         <a class="gp-card gp-card--vanilla is-featured" href="focus-navigator.html">
-          <span class="gp-card__tag">Accessibility</span>
+          <span class="gp-card__tag">Featured</span>
           <span class="gp-card__title">Focus Navigator</span>
           <span class="gp-card__desc">Stick moves focus between buttons — smart-TV / kiosk UI.</span>
         </a>
@@ -78,22 +76,17 @@
         </a>
       </div>
 
-      <p class="gp-mono" style="margin-top: 2rem; font-size: 0.72rem; color: var(--gp-text-faint)">
-        Graphics-heavy demos →
-        <a href="/html5/index.html" style="color: var(--gp-html5)">HTML5 Lab</a>
-        · Next.js app →
-        <a href="/" style="color: var(--gp-accent)">Hub</a>
-      </p>
+      <footer class="gp-vanilla-footer">
+        <a class="gp-vanilla-footer__link" href="/">Hub (Next.js)</a>
+        <a class="gp-vanilla-footer__link gp-vanilla-footer__link--html5" href="/html5/index.html"
+          >HTML5 Lab</a
+        >
+      </footer>
     </div>
     <script src="/html5/gamepad.js"></script>
+    <script src="vanilla.js"></script>
     <script>
-      GamepadHTML5.poll((s) => {
-        const el = document.getElementById("status");
-        el.textContent = s.connected
-          ? "Connected: " + s.id
-          : "Plug in controller & press any button";
-        el.style.color = s.connected ? "var(--gp-vanilla)" : "var(--gp-warn)";
-      });
+      VanillaLab.initPage({ title: "Vanilla Lab", home: true });
     </script>
   </body>
 </html>

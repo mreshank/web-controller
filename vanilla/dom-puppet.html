@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>DOM Puppet — Vanilla Lab</title>
-    <link rel="stylesheet" href="https://static.mreshank.com/gamepad/styles.css" />
+    <link rel="stylesheet" href="/gamepad/styles.css" data-gp-styles="1" />
     <style>
       .stage {
         position: relative;
@@ -31,9 +31,8 @@
       }
     </style>
   </head>
-  <body class="gp-root gp-vanilla">
+  <body class="gp-root gp-vanilla gp-vanilla--chromed">
     <div class="gp-wrap">
-      <a href="index.html" class="gp-btn gp-btn--ghost" style="display: inline-flex; margin-bottom: 1rem">← Lab</a>
       <h1 class="gp-heading">DOM Puppet</h1>
       <p class="gp-lead">Pure <code class="gp-mono">transform</code> — left stick move, right X rotate, R2 scale.</p>
       <div class="stage">
@@ -41,6 +40,8 @@
       </div>
     </div>
     <script src="/html5/gamepad.js"></script>
+    <script src="vanilla.js"></script>
+    <script>VanillaLab.initPage({ title: "DOM Puppet" });</script>
     <script>
       const el = document.getElementById("puppet");
       const stage = el.parentElement;
