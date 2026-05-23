@@ -27,10 +27,17 @@ const EXPERIENCES = [
     mod: "gp-card--demo",
   },
   {
+    href: "/vanilla",
+    title: "Vanilla Web Dev Lab",
+    tag: "Architecture",
+    desc: "HTML + CSS + JS patterns — focus UI, scroll, CSS vars, media remote, slots.",
+    mod: "gp-card--vanilla",
+  },
+  {
     href: "/html5/index.html",
     title: "HTML5 Lab",
-    tag: "Zero build",
-    desc: "Vanilla HTML/CSS/JS. Same API, no framework — maximum ROI per line.",
+    tag: "Graphics",
+    desc: "Canvas, CSS driver, WebGL — zero build, maximum visual punch.",
     mod: "gp-card--html5",
   },
 ] as const;
@@ -74,8 +81,8 @@ export function HubPage() {
             </span>
           </h1>
           <p className="gp-lead">
-            Four runtime modes — technical demo, multiplayer arena, explorable
-            story, and vanilla labs — all driven by the same Gamepad API. One
+            Talk demo, multiplayer arena, story world, HTML5 graphics lab, and
+            Vanilla web-dev lab — all driven by the same Gamepad API. One
             stylesheet powers the entire surface.
           </p>
 

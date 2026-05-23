@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CSS Variables Studio — Vanilla Lab</title>
+    <link rel="stylesheet" href="https://static.mreshank.com/gamepad/styles.css" />
+    <style>
+      :root {
+        --hue: 18;
+        --sat: 72%;
+        --lit: 58%;
+        --blur: 12px;
+      }
+      .preview {
+        margin-top: 1.25rem;
+        height: min(42vh, 280px);
+        border-radius: var(--gp-radius-lg);
+        background: hsl(var(--hue) var(--sat) var(--lit));
+        box-shadow: 0 0 60px hsl(var(--hue) var(--sat) var(--lit) / 0.45);
+        filter: blur(calc(var(--blur) * 0.08));
+        border: 2px solid hsl(var(--hue) var(--sat) calc(var(--lit) + 12%) / 0.5);
+        display: grid;
+        place-items: center;
+        font-family: var(--gp-font-display);
+        font-size: 1.25rem;
+        color: #fff;
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+      }
+      .sliders {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+        margin-top: 1rem;
+        font-size: 0.75rem;
+        color: var(--gp-text-muted);
+      }
+    </style>
+  </head>
+  <body class="gp-root gp-vanilla">
+    <div class="gp-wrap">
+      <a href="index.html" class="gp-btn gp-btn--ghost" style="display: inline-flex; margin-bottom: 1rem">← Lab</a>
+      <h1 class="gp-heading">CSS Variables Studio</h1>
+      <p class="gp-lead">Sticks write to <code class="gp-mono">:root</code> — designers own the look, JS only feeds numbers.</p>
+      <div class="preview" id="preview">Live theme</div>
+      <div class="sliders gp-mono" id="readout"></div>
+      <p class="gp-hud__meta" style="margin-top: 1rem">LX/LY hue · RX saturation · RY lightness · L2/R2 blur · × copy CSS</p>
+    </div>
+    <script src="/html5/gamepad.js"></script>
+    <script src="vanilla.js"></script>
+    <script>
+      const root = document.documentElement;
+      const readout = document.getElementById("readout");
+      let prevA = false;
+
+      function apply(s) {
+        if (!s.connected) return;
+        root.style.setProperty("--hue", String(Math.round(18 + s.lx * 140)));
+        root.style.setProperty("--sat", Math.round(40 + (s.ly * -1 + 1) * 0.5 * 60) + "%");
+        root.style.setProperty("--lit", Math.round(35 + (s.ry * -1 + 1) * 0.5 * 45) + "%");
+        root.style.setProperty("--blur", String(Math.round(4 + s.l2 * 20 + s.r2 * 20)) + "px");
+        readout.textContent = `--hue: ${getComputedStyle(root).getPropertyValue("--hue")} · --sat: ${getComputedStyle(root).getPropertyValue("--sat")}`;
+        if (s.buttons[0] && !prevA) {
+          const css = getComputedStyle(root);
+          navigator.clipboard?.writeText(
+            `:root {\n  --hue: ${css.getPropertyValue("--hue")};\n  --sat: ${css.getPropertyValue("--sat")};\n  --lit: ${css.getPropertyValue("--lit")};\n}`
+          );
+          VanillaLab.pulseVibration();
+        }
+        prevA = s.buttons[0];
+      }
+
+      GamepadHTML5.poll(apply);
+    </script>
+  </body>
+</html>

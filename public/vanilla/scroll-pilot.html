@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Scroll Pilot — Vanilla Lab</title>
+    <link rel="stylesheet" href="https://static.mreshank.com/gamepad/styles.css" />
+    <style>
+      .gp-vanilla-section {
+        min-height: 85vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 3rem 1.5rem;
+        border-bottom: 1px solid var(--gp-border);
+        opacity: 0.35;
+        transition: opacity 0.35s;
+      }
+      .gp-vanilla-section.is-active {
+        opacity: 1;
+      }
+      .gp-vanilla-section h2 {
+        font-family: var(--gp-font-display);
+        font-size: clamp(1.5rem, 4vw, 2rem);
+        color: var(--gp-vanilla);
+      }
+    </style>
+  </head>
+  <body class="gp-root gp-vanilla">
+    <p class="gp-mono" style="position: fixed; top: 0.75rem; left: 1rem; z-index: 10; font-size: 0.7rem">
+      <a href="index.html" style="color: var(--gp-accent)">← Lab</a> · Right stick scroll · L/R bumpers snap section
+    </p>
+    <section class="gp-vanilla-section is-active" data-i="0">
+      <h2>01 — Long-form without a wheel</h2>
+      <p class="gp-lead">Right stick feeds <code class="gp-mono">scrollBy</code>. Great for docs, portfolios, museum kiosks.</p>
+    </section>
+    <section class="gp-vanilla-section" data-i="1">
+      <h2>02 — Snap on demand</h2>
+      <p class="gp-lead">L1/R1 (buttons 4/5) jump between sections — combine scroll + snap.</p>
+    </section>
+    <section class="gp-vanilla-section" data-i="2">
+      <h2>03 — Same API as games</h2>
+      <p class="gp-lead">One poll loop. Your talk site can feel like a controller-native app.</p>
+    </section>
+    <section class="gp-vanilla-section" data-i="3">
+      <h2>04 — Ship it</h2>
+      <p class="gp-lead">~40 lines of JS. No framework required.</p>
+    </section>
+    <script src="/html5/gamepad.js"></script>
+    <script>
+      const sections = [...document.querySelectorAll(".gp-vanilla-section")];
+      let active = 0;
+      let prevL = false;
+      let prevR = false;
+
+      function setActive(i) {
+        active = Math.max(0, Math.min(sections.length - 1, i));
+        sections.forEach((s, j) => s.classList.toggle("is-active", j === active));
+        sections[active].scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      GamepadHTML5.poll((s) => {
+        if (!s.connected) return;
+        window.scrollBy({ top: -s.ry * 14, behavior: "auto" });
+        const l = s.buttons[4];
+        const r = s.buttons[5];
+        if (l && !prevL) setActive(active - 1);
+        if (r && !prevR) setActive(active + 1);
+        prevL = l;
+        prevR = r;
+      });
+    </script>
+  </body>
+</html>

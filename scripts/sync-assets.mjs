@@ -12,6 +12,7 @@ function syncDir(src, dest) {
 }
 
 syncDir(join(root, "html5"), join(root, "public", "html5"));
+syncDir(join(root, "vanilla"), join(root, "public", "vanilla"));
 
 const cssSrc = join(root, "styles", "gamepad.css");
 const cssDest = join(root, "public", "gamepad");

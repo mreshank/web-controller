@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DOM Puppet — Vanilla Lab</title>
+    <link rel="stylesheet" href="https://static.mreshank.com/gamepad/styles.css" />
+    <style>
+      .stage {
+        position: relative;
+        height: min(55vh, 360px);
+        margin-top: 1rem;
+        border-radius: var(--gp-radius-lg);
+        border: 1px solid var(--gp-border);
+        background: radial-gradient(circle at 50% 50%, var(--gp-bg-elevated), var(--gp-bg));
+        overflow: hidden;
+      }
+      #puppet {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 120px;
+        padding: 1rem;
+        border-radius: var(--gp-radius);
+        background: linear-gradient(135deg, var(--gp-vanilla), #f472b6);
+        color: #fff;
+        font-family: var(--gp-font-display);
+        text-align: center;
+        will-change: transform;
+        box-shadow: 0 12px 40px rgba(255, 107, 53, 0.35);
+      }
+    </style>
+  </head>
+  <body class="gp-root gp-vanilla">
+    <div class="gp-wrap">
+      <a href="index.html" class="gp-btn gp-btn--ghost" style="display: inline-flex; margin-bottom: 1rem">← Lab</a>
+      <h1 class="gp-heading">DOM Puppet</h1>
+      <p class="gp-lead">Pure <code class="gp-mono">transform</code> — left stick move, right X rotate, R2 scale.</p>
+      <div class="stage">
+        <div id="puppet">Drag me</div>
+      </div>
+    </div>
+    <script src="/html5/gamepad.js"></script>
+    <script>
+      const el = document.getElementById("puppet");
+      const stage = el.parentElement;
+      let x = 0;
+      let y = 0;
+      let rot = 0;
+      let scale = 1;
+
+      GamepadHTML5.poll((s) => {
+        if (!s.connected) return;
+        const w = stage.clientWidth;
+        const h = stage.clientHeight;
+        x += s.lx * 6;
+        y += s.ly * 6;
+        rot += s.rx * 3;
+        scale = Math.max(0.5, Math.min(2, scale + s.r2 * 0.02 - s.l2 * 0.02));
+        x = Math.max(-w / 2 + 60, Math.min(w / 2 - 60, x));
+        y = Math.max(-h / 2 + 40, Math.min(h / 2 - 40, y));
+        el.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${rot}deg) scale(${scale})`;
+      });
+    </script>
+  </body>
+</html>

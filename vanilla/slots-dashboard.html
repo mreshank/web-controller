@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Slots Dashboard — Vanilla Lab</title>
+    <link rel="stylesheet" href="https://static.mreshank.com/gamepad/styles.css" />
+    <style>
+      .dash {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.65rem;
+        margin-top: 1.25rem;
+      }
+      @media (max-width: 700px) {
+        .dash { grid-template-columns: repeat(2, 1fr); }
+      }
+      .slot {
+        padding: 0.85rem;
+        border-radius: var(--gp-radius);
+        border: 1px solid var(--gp-border);
+        background: var(--gp-bg-elevated);
+        font-size: 0.72rem;
+      }
+      .slot.is-on {
+        border-color: var(--gp-vanilla);
+        box-shadow: 0 0 16px rgba(255, 107, 53, 0.2);
+      }
+      .slot h3 {
+        margin: 0 0 0.5rem;
+        font-family: var(--gp-font-mono);
+        font-size: 0.65rem;
+        color: var(--gp-text-faint);
+      }
+      .bar {
+        height: 6px;
+        margin: 0.25rem 0;
+        background: var(--gp-bg);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .bar span {
+        display: block;
+        height: 100%;
+        background: var(--gp-vanilla);
+        transform-origin: left;
+      }
+    </style>
+  </head>
+  <body class="gp-root gp-vanilla">
+    <div class="gp-wrap" style="max-width: 56rem">
+      <a href="index.html" class="gp-btn gp-btn--ghost" style="display: inline-flex; margin-bottom: 1rem">← Lab</a>
+      <h1 class="gp-heading">Slots Dashboard</h1>
+      <p class="gp-lead">Scan indices 0–3 every frame — connection order ≠ slot order.</p>
+      <div class="dash" id="dash"></div>
+    </div>
+    <script src="/html5/gamepad.js"></script>
+    <script src="vanilla.js"></script>
+    <script>
+      const dash = document.getElementById("dash");
+      const slots = [0, 1, 2, 3].map((i) => {
+        const el = document.createElement("div");
+        el.className = "slot";
+        el.innerHTML = `<h3>SLOT ${i}</h3><p class="id">—</p><div class="bar"><span style="width:50%"></span></div><div class="bar"><span style="width:50%"></span></div>`;
+        dash.appendChild(el);
+        return el;
+      });
+
+      function tick() {
+        const connected = new Set(VanillaLab.allSlots().map((s) => s.index));
+        slots.forEach((el, i) => {
+          const pad = VanillaLab.allSlots().find((p) => p.index === i);
+          el.classList.toggle("is-on", connected.has(i));
+          el.querySelector(".id").textContent = pad
+            ? pad.id.slice(0, 28)
+            : "No controller";
+          const bars = el.querySelectorAll(".bar span");
+          if (pad && bars[0]) {
+            bars[0].style.width = ((pad.lx + 1) * 50) + "%";
+            bars[1].style.width = ((pad.ly + 1) * 50) + "%";
+          }
+        });
+        requestAnimationFrame(tick);
+      }
+      tick();
+    </script>
+  </body>
+</html>

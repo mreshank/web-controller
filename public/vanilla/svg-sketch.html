@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SVG Sketch — Vanilla Lab</title>
+    <link rel="stylesheet" href="https://static.mreshank.com/gamepad/styles.css" />
+    <style>
+      #board {
+        width: 100%;
+        max-width: 36rem;
+        height: min(50vh, 320px);
+        margin-top: 1rem;
+        border-radius: var(--gp-radius-lg);
+        border: 1px solid var(--gp-border);
+        background: #0a0e18;
+        touch-action: none;
+      }
+      line {
+        stroke-linecap: round;
+      }
+    </style>
+  </head>
+  <body class="gp-root gp-vanilla">
+    <div class="gp-wrap">
+      <a href="index.html" class="gp-btn gp-btn--ghost" style="display: inline-flex; margin-bottom: 1rem">← Lab</a>
+      <h1 class="gp-heading">SVG Sketch</h1>
+      <p class="gp-lead">Hold × to draw · sticks move pen · face buttons pick color · ○ clears.</p>
+      <svg id="board" viewBox="0 0 400 300"><g id="lines"></g></svg>
+      <p id="color" class="gp-mono" style="margin-top: 0.5rem; font-size: 0.75rem"></p>
+    </div>
+    <script src="/html5/gamepad.js"></script>
+    <script>
+      const colors = ["#00e8cc", "#f97316", "#a78bfa", "#fde047"];
+      const g = document.getElementById("lines");
+      const colorEl = document.getElementById("color");
+      let px = 200;
+      let py = 150;
+      let ci = 0;
+      let drawing = false;
+      let prevA = false;
+      let prevB = false;
+      let last = null;
+
+      function lineTo(x, y) {
+        if (!last) {
+          last = { x, y };
+          return;
+        }
+        const ln = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        ln.setAttribute("x1", last.x);
+        ln.setAttribute("y1", last.y);
+        ln.setAttribute("x2", x);
+        ln.setAttribute("y2", y);
+        ln.setAttribute("stroke", colors[ci]);
+        ln.setAttribute("stroke-width", "3");
+        g.appendChild(ln);
+        last = { x, y };
+      }
+
+      colorEl.textContent = "Color: " + colors[ci];
+
+      GamepadHTML5.poll((s) => {
+        if (!s.connected) return;
+        px = Math.max(10, Math.min(390, px + s.lx * 5));
+        py = Math.max(10, Math.min(290, py + s.ly * 5));
+        if (s.buttons[1] && !prevB) {
+          g.innerHTML = "";
+          last = null;
+        }
+        prevB = s.buttons[1];
+        [0, 1, 2, 3].forEach((i) => {
+          if (s.buttons[i] && !prevA && i < 4) {
+            ci = i;
+            colorEl.textContent = "Color: " + colors[ci];
+          }
+        });
+        drawing = s.buttons[0];
+        if (drawing) lineTo(px, py);
+        else last = null;
+        prevA = s.buttons.some(Boolean);
+      });
+    </script>
+  </body>
+</html>

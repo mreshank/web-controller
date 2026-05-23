@@ -36,11 +36,18 @@ const PUBLIC_STAGE_ROUTES = [
     keys: "N notes · B backup",
   },
   {
+    href: "/vanilla",
+    label: "Vanilla Web Dev Lab",
+    mod: "gp-stage-card--amber",
+    desc: "HTML+CSS+JS patterns — focus, scroll, CSS vars, media UI.",
+    keys: "",
+  },
+  {
     href: "/html5/index.html",
     label: "HTML5 lab",
     mod: "gp-stage-card--amber",
-    desc: "Vanilla zero-build demos.",
-    keys: "serve html5/ on :3333",
+    desc: "Canvas, CSS driver, WebGL — zero build.",
+    keys: "serve html5/ on :3340",
   },
   {
     href: "/naive",

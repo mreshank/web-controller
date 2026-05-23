@@ -27,6 +27,8 @@
   --gp-story: #9d7aff;
   --gp-demo: #00c4ff;
   --gp-html5: #c8ff00;
+  --gp-vanilla: #ff6b35;
+  --gp-vanilla-dim: rgba(255, 107, 53, 0.12);
   --gp-naive: #ff6b3d;
   --gp-font-display: "Syne", system-ui, sans-serif;
   --gp-font-body: "DM Sans", system-ui, sans-serif;
@@ -379,6 +381,26 @@
 }
 .gp-card--html5 .gp-card__tag {
   color: var(--gp-html5);
+}
+
+.gp-card--vanilla::before {
+  background: linear-gradient(135deg, var(--gp-vanilla), #f472b6);
+}
+.gp-card--vanilla:hover {
+  border-color: rgba(255, 107, 53, 0.45);
+}
+.gp-card--vanilla .gp-card__tag {
+  color: var(--gp-vanilla);
+}
+
+.gp-vanilla {
+  min-height: 100vh;
+  padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 3vw, 1.5rem);
+}
+
+.gp-vanilla .gp-wrap {
+  width: min(52rem, 100%);
+  margin-inline: auto;
 }
 
 /* ─── Chips / toolbar links ──────────────────────────────────────────── */

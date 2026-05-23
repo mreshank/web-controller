@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Page Deck — Vanilla Lab</title>
+    <link rel="stylesheet" href="https://static.mreshank.com/gamepad/styles.css" />
+    <style>
+      html, body { margin: 0; height: 100%; overflow: hidden; }
+      .slide {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        padding: 2rem;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s;
+        background: var(--gp-bg);
+      }
+      .slide.is-on {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .slide h2 {
+        font-family: var(--gp-font-display);
+        font-size: clamp(2rem, 6vw, 3.5rem);
+        color: var(--gp-vanilla);
+        text-align: center;
+        max-width: 18ch;
+      }
+      .slide p {
+        text-align: center;
+        color: var(--gp-text-muted);
+        margin-top: 1rem;
+        max-width: 40ch;
+      }
+      .ui {
+        position: fixed;
+        bottom: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.7rem;
+        color: var(--gp-text-faint);
+        z-index: 5;
+      }
+    </style>
+  </head>
+  <body class="gp-root gp-vanilla">
+    <div class="slide is-on" data-i="0">
+      <div>
+        <h2>Controller-native slides</h2>
+        <p>Right stick → next · Left stick → prev · No clicker needed.</p>
+      </div>
+    </div>
+    <div class="slide" data-i="1">
+      <div>
+        <h2>Gamepad API</h2>
+        <p>navigator.getGamepads() inside requestAnimationFrame.</p>
+      </div>
+    </div>
+    <div class="slide" data-i="2">
+      <div>
+        <h2>Vanilla wins</h2>
+        <p>HTML + CSS + JS — ship kiosks and installs tomorrow.</p>
+      </div>
+    </div>
+    <div class="slide" data-i="3">
+      <div>
+        <h2>Thank you</h2>
+        <p><a href="index.html" style="color: var(--gp-accent)">Back to lab</a></p>
+      </div>
+    </div>
+    <p class="ui gp-mono">← → sticks · slide <span id="n">1</span>/4</p>
+    <script src="/html5/gamepad.js"></script>
+    <script src="vanilla.js"></script>
+    <script>
+      const slides = [...document.querySelectorAll(".slide")];
+      const num = document.getElementById("n");
+      let i = 0;
+      let last = 0;
+
+      function go(next) {
+        slides[i].classList.remove("is-on");
+        i = Math.max(0, Math.min(slides.length - 1, next));
+        slides[i].classList.add("is-on");
+        num.textContent = String(i + 1);
+        VanillaLab.pulseVibration(30, 0.15, 0.35);
+      }
+
+      GamepadHTML5.poll((s) => {
+        if (!s.connected) return;
+        const now = performance.now();
+        if (now - last < 400) return;
+        if (s.rx > 0.65) {
+          last = now;
+          go(i + 1);
+        }
+        if (s.rx < -0.65) {
+          last = now;
+          go(i - 1);
+        }
+      });
+    </script>
+  </body>
+</html>

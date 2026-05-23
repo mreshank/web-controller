@@ -21,7 +21,8 @@ Open [http://localhost:3000](http://localhost:3000) — the hub links to everyth
 | `/demo` | `demo/` | 25-min talk: R3F cube, HUD, presenter tools |
 | `/game` | `game/` | **Orb Rush** — up to 4 controllers, 3D arena, orbs |
 | `/story` | `story/` | Fly through narrative beacons in **your order** |
-| `/html5/…` | `html5/` | Vanilla demos (visualizer, canvas ship, CSS, Three CDN) |
+| `/vanilla` | `vanilla/` | **Vanilla Web Dev Lab** — focus UI, CSS vars, scroll, media remote, slots |
+| `/html5/…` | `html5/` | HTML5 graphics lab (canvas, CSS driver, Three CDN) |
 
 ## Shared (root)
 

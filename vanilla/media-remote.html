@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Media Remote — Vanilla Lab</title>
+    <link rel="stylesheet" href="https://static.mreshank.com/gamepad/styles.css" />
+    <style>
+      .player {
+        margin-top: 1rem;
+        padding: 1.25rem;
+        border-radius: var(--gp-radius-lg);
+        background: var(--gp-bg-elevated);
+        border: 1px solid var(--gp-border);
+      }
+      .screen {
+        aspect-ratio: 16/9;
+        background: #000;
+        border-radius: var(--gp-radius);
+        display: grid;
+        place-items: center;
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+      .tiles {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.5rem;
+      }
+      .tile {
+        padding: 0.65rem 0.25rem;
+        text-align: center;
+        border-radius: 8px;
+        border: 2px solid transparent;
+        background: var(--gp-bg);
+        font-size: 0.7rem;
+        color: var(--gp-text-muted);
+      }
+      .tile.is-focus {
+        border-color: var(--gp-vanilla);
+        color: var(--gp-vanilla);
+      }
+    </style>
+  </head>
+  <body class="gp-root gp-vanilla">
+    <div class="gp-wrap">
+      <a href="index.html" class="gp-btn gp-btn--ghost" style="display: inline-flex; margin-bottom: 1rem">← Lab</a>
+      <h1 class="gp-heading">Media Remote</h1>
+      <p class="gp-lead">Stick navigates tiles · × play/pause · product UI without a mouse.</p>
+      <div class="player">
+        <div class="screen" id="screen">▶</div>
+        <div class="tiles" id="tiles"></div>
+        <p id="status" class="gp-mono" style="margin-top: 0.75rem; font-size: 0.75rem"></p>
+      </div>
+    </div>
+    <script src="/html5/gamepad.js"></script>
+    <script src="vanilla.js"></script>
+    <script>
+      const titles = ["Talk", "Demo", "Game", "Story", "Lab A", "Lab B", "Q&A", "Credits"];
+      const tiles = document.getElementById("tiles");
+      const screen = document.getElementById("screen");
+      const status = document.getElementById("status");
+      let idx = 0;
+      let playing = false;
+      let lastDir = 0;
+      let prevA = false;
+
+      titles.forEach((t, i) => {
+        const d = document.createElement("div");
+        d.className = "tile";
+        d.textContent = t;
+        tiles.appendChild(d);
+      });
+
+      function paint() {
+        [...tiles.children].forEach((c, i) => c.classList.toggle("is-focus", i === idx));
+        status.textContent = (playing ? "Playing" : "Paused") + " — " + titles[idx];
+        screen.textContent = playing ? "❚❚" : "▶";
+      }
+      paint();
+
+      GamepadHTML5.poll((s) => {
+        if (!s.connected) return;
+        const dir = VanillaLab.stickDir(s.lx, s.ly);
+        const now = performance.now();
+        if (dir && now - lastDir > 160) {
+          lastDir = now;
+          if (dir === "right") idx = Math.min(titles.length - 1, idx + 1);
+          if (dir === "left") idx = Math.max(0, idx - 1);
+          paint();
+        }
+        if (s.buttons[0] && !prevA) {
+          playing = !playing;
+          VanillaLab.pulseVibration();
+          paint();
+        }
+        prevA = s.buttons[0];
+      });
+    </script>
+  </body>
+</html>

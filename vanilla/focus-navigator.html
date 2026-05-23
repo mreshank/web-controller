@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Focus Navigator — Vanilla Lab</title>
+    <link rel="stylesheet" href="https://static.mreshank.com/gamepad/styles.css" />
+    <style>
+      .gp-vanilla-nav-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.75rem;
+        margin-top: 1.25rem;
+      }
+      .gp-vanilla-nav-grid button {
+        padding: 1rem;
+        border-radius: var(--gp-radius);
+        border: 2px solid var(--gp-border);
+        background: var(--gp-bg-elevated);
+        color: var(--gp-text);
+        font-family: var(--gp-font-display);
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+      }
+      .gp-vanilla-nav-grid button.is-focus {
+        border-color: var(--gp-vanilla);
+        box-shadow: 0 0 20px rgba(255, 107, 53, 0.35);
+        transform: scale(1.03);
+      }
+      .gp-vanilla-nav-grid button:active {
+        background: var(--gp-vanilla-dim);
+      }
+      #log {
+        margin-top: 1rem;
+        min-height: 1.5rem;
+        font-size: 0.8rem;
+        color: var(--gp-vanilla);
+      }
+    </style>
+  </head>
+  <body class="gp-root gp-vanilla">
+    <div class="gp-wrap">
+      <a href="index.html" class="gp-btn gp-btn--ghost" style="display: inline-flex; margin-bottom: 1rem">← Lab</a>
+      <h1 class="gp-heading">Focus Navigator</h1>
+      <p class="gp-lead">Stick moves highlight · × activates · like a smart TV or kiosk.</p>
+      <div class="gp-vanilla-nav-grid" id="grid"></div>
+      <p id="log" class="gp-mono"></p>
+    </div>
+    <script src="/html5/gamepad.js"></script>
+    <script src="vanilla.js"></script>
+    <script>
+      const COLS = 3;
+      const ROWS = 4;
+      const labels = [
+        "Home", "Browse", "Settings",
+        "Profile", "Messages", "Help",
+        "Downloads", "Cast", "Search",
+        "Exit", "Legal", "About",
+      ];
+      const grid = document.getElementById("grid");
+      const log = document.getElementById("log");
+      let row = 0;
+      let col = 0;
+      let lastDir = 0;
+      let prevA = false;
+
+      labels.forEach((label, i) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.textContent = label;
+        b.dataset.i = String(i);
+        b.addEventListener("click", () => activate(b));
+        grid.appendChild(b);
+      });
+
+      const buttons = () => [...grid.querySelectorAll("button")];
+
+      function paint() {
+        const i = row * COLS + col;
+        buttons().forEach((b, j) => b.classList.toggle("is-focus", j === i));
+      }
+
+      function activate(b) {
+        log.textContent = "Activated: " + b.textContent;
+        VanillaLab.pulseVibration(60);
+        b.animate(
+          [{ transform: "scale(1)" }, { transform: "scale(0.95)" }, { transform: "scale(1)" }],
+          { duration: 200 }
+        );
+      }
+
+      paint();
+
+      GamepadHTML5.poll((s) => {
+        if (!s.connected) return;
+        const dir = VanillaLab.stickDir(s.lx, s.ly);
+        const now = performance.now();
+        if (dir && now - lastDir > 180) {
+          lastDir = now;
+          if (dir === "left") col = Math.max(0, col - 1);
+          if (dir === "right") col = Math.min(COLS - 1, col + 1);
+          if (dir === "up") row = Math.max(0, row - 1);
+          if (dir === "down") row = Math.min(ROWS - 1, row + 1);
+          paint();
+        }
+        const a = s.buttons[0];
+        if (a && !prevA) activate(buttons()[row * COLS + col]);
+        prevA = a;
+      });
+    </script>
+  </body>
+</html>

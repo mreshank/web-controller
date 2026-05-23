@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vanilla Web Dev Lab — HTML + CSS + JS + Gamepad</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://static.mreshank.com/gamepad/styles.css" />
+  </head>
+  <body class="gp-root gp-vanilla">
+    <div class="gp-wrap">
+      <p class="gp-badge">Vanilla Web Dev Lab</p>
+      <h1 class="gp-display" style="font-size: clamp(1.5rem, 4vw, 2.1rem)">
+        HTML + CSS + JS + Controller
+      </h1>
+      <p class="gp-lead">
+        Nine minimal demos — same Gamepad API, zero React. Each file is one product
+        pattern: focus UI, scroll, CSS variables, drawing, media remote, and more.
+      </p>
+      <div class="gp-serve">
+        <code class="gp-mono">npx --yes serve . -p 3340</code> or
+        <a href="http://localhost:3000/vanilla/">localhost:3000/vanilla</a>
+      </div>
+      <p id="status" class="gp-mono" style="font-size: 0.8rem; color: var(--gp-warn)">
+        Press any button on your controller…
+      </p>
+
+      <div class="gp-card-grid" style="margin-top: 1.5rem">
+        <a class="gp-card gp-card--vanilla is-featured" href="focus-navigator.html">
+          <span class="gp-card__tag">Accessibility</span>
+          <span class="gp-card__title">Focus Navigator</span>
+          <span class="gp-card__desc">Stick moves focus between buttons — smart-TV / kiosk UI.</span>
+        </a>
+        <a class="gp-card gp-card--vanilla" href="css-vars-studio.html">
+          <span class="gp-card__tag">CSS</span>
+          <span class="gp-card__title">CSS Variables Studio</span>
+          <span class="gp-card__desc">Sticks drive custom properties — live theme without React.</span>
+        </a>
+        <a class="gp-card gp-card--vanilla" href="scroll-pilot.html">
+          <span class="gp-card__tag">DOM</span>
+          <span class="gp-card__title">Scroll Pilot</span>
+          <span class="gp-card__desc">Right stick scrolls the page — deck / long-read mode.</span>
+        </a>
+        <a class="gp-card gp-card--vanilla" href="pad-sequencer.html">
+          <span class="gp-card__tag">Audio UI</span>
+          <span class="gp-card__title">Pad Sequencer</span>
+          <span class="gp-card__desc">Face buttons trigger a grid — rhythm / launcher pad.</span>
+        </a>
+        <a class="gp-card gp-card--vanilla" href="dom-puppet.html">
+          <span class="gp-card__tag">Transform</span>
+          <span class="gp-card__title">DOM Puppet</span>
+          <span class="gp-card__desc">Move, rotate, scale any card with sticks + triggers.</span>
+        </a>
+        <a class="gp-card gp-card--vanilla" href="svg-sketch.html">
+          <span class="gp-card__tag">SVG</span>
+          <span class="gp-card__title">SVG Sketch</span>
+          <span class="gp-card__desc">Draw vector lines — left stick + color buttons.</span>
+        </a>
+        <a class="gp-card gp-card--vanilla" href="media-remote.html">
+          <span class="gp-card__tag">Product</span>
+          <span class="gp-card__title">Media Remote</span>
+          <span class="gp-card__desc">Netflix-style UI — navigate tiles, play with ×.</span>
+        </a>
+        <a class="gp-card gp-card--vanilla" href="page-deck.html">
+          <span class="gp-card__tag">Talks</span>
+          <span class="gp-card__title">Page Deck</span>
+          <span class="gp-card__desc">Fullscreen slides — stick flips your presentation.</span>
+        </a>
+        <a class="gp-card gp-card--vanilla" href="slots-dashboard.html">
+          <span class="gp-card__tag">API</span>
+          <span class="gp-card__title">Slots Dashboard</span>
+          <span class="gp-card__desc">All four browser slots live — never assume index 0.</span>
+        </a>
+      </div>
+
+      <p class="gp-mono" style="margin-top: 2rem; font-size: 0.72rem; color: var(--gp-text-faint)">
+        Graphics-heavy demos →
+        <a href="/html5/index.html" style="color: var(--gp-html5)">HTML5 Lab</a>
+        · Next.js app →
+        <a href="/" style="color: var(--gp-accent)">Hub</a>
+      </p>
+    </div>
+    <script src="/html5/gamepad.js"></script>
+    <script>
+      GamepadHTML5.poll((s) => {
+        const el = document.getElementById("status");
+        el.textContent = s.connected
+          ? "Connected: " + s.id
+          : "Plug in controller & press any button";
+        el.style.color = s.connected ? "var(--gp-vanilla)" : "var(--gp-warn)";
+      });
+    </script>
+  </body>
+</html>

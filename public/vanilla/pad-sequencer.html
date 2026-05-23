@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pad Sequencer — Vanilla Lab</title>
+    <link rel="stylesheet" href="https://static.mreshank.com/gamepad/styles.css" />
+    <style>
+      .seq {
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        gap: 0.35rem;
+        max-width: 28rem;
+        margin-top: 1rem;
+      }
+      .seq .cell {
+        aspect-ratio: 1;
+        border-radius: 6px;
+        background: var(--gp-bg-elevated);
+        border: 1px solid var(--gp-border);
+        transition: background 0.08s, transform 0.08s;
+      }
+      .seq .cell.on {
+        background: var(--gp-vanilla);
+        box-shadow: 0 0 12px var(--gp-vanilla);
+        transform: scale(1.05);
+      }
+    </style>
+  </head>
+  <body class="gp-root gp-vanilla">
+    <div class="gp-wrap">
+      <a href="index.html" class="gp-btn gp-btn--ghost" style="display: inline-flex; margin-bottom: 1rem">← Lab</a>
+      <h1 class="gp-heading">Pad Sequencer</h1>
+      <p class="gp-lead">Face buttons = pads · sticks move cursor · R2 clears · Web Audio beeps.</p>
+      <div class="seq" id="seq"></div>
+      <p id="hint" class="gp-mono" style="margin-top: 1rem; font-size: 0.75rem; color: var(--gp-text-faint)"></p>
+    </div>
+    <script src="/html5/gamepad.js"></script>
+    <script src="vanilla.js"></script>
+    <script>
+      const COLS = 8;
+      const ROWS = 4;
+      const seq = document.getElementById("seq");
+      const hint = document.getElementById("hint");
+      const cells = [];
+      let cur = 0;
+      const prev = [false, false, false, false];
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+      function beep(freq = 440) {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.frequency.value = freq;
+        g.gain.value = 0.08;
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.start();
+        o.stop(ctx.currentTime + 0.08);
+      }
+
+      for (let i = 0; i < COLS * ROWS; i++) {
+        const d = document.createElement("div");
+        d.className = "cell";
+        seq.appendChild(d);
+        cells.push(d);
+      }
+
+      function toggle(i) {
+        cells[i].classList.toggle("on");
+        beep(220 + (i % COLS) * 40);
+        VanillaLab.pulseVibration(40, 0.2, 0.5);
+      }
+
+      GamepadHTML5.poll((s) => {
+        if (!s.connected) return;
+        const dir = VanillaLab.stickDir(s.lx, s.ly, 0.65);
+        if (dir === "right") cur = Math.min(cells.length - 1, cur + 1);
+        if (dir === "left") cur = Math.max(0, cur - 1);
+        if (dir === "down") cur = Math.min(cells.length - 1, cur + COLS);
+        if (dir === "up") cur = Math.max(0, cur - COLS);
+        cells.forEach((c, i) => (c.style.outline = i === cur ? "2px solid var(--gp-vanilla)" : ""));
+        hint.textContent = `Cursor pad ${cur} · × ${s.buttons[0] ? "on" : "off"}`;
+        [0, 1, 2, 3].forEach((bi) => {
+          if (s.buttons[bi] && !prev[bi]) toggle(cur);
+          prev[bi] = s.buttons[bi];
+        });
+        if (s.r2 > 0.8) cells.forEach((c) => c.classList.remove("on"));
+        if (s.buttons[0] && !prev[0]) ctx.resume();
+      });
+    </script>
+  </body>
+</html>
