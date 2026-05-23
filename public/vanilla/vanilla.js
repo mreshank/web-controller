@@ -44,7 +44,9 @@
           ly: global.GamepadHTML5.apply(p.axes[1] ?? 0),
           rx: global.GamepadHTML5.apply(p.axes[2] ?? 0),
           ry: global.GamepadHTML5.apply(p.axes[3] ?? 0),
-          buttons: Array.from(p.buttons, (b) => b.pressed),
+          buttons: Array.from(p.buttons, (b) =>
+            Boolean(b && (b.pressed || (b.value ?? 0) > 0.45))
+          ),
         });
       }
     }

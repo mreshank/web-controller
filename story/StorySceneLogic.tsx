@@ -6,8 +6,7 @@ import { STORY_CHAPTERS } from "@/story/chapters";
 import { StoryBeacon } from "@/story/StoryBeacon";
 import { StoryCamera } from "@/story/StoryCamera";
 import { StoryEnvironment } from "@/story/StoryEnvironment";
-import { useGamepad } from "@/hooks/useGamepad";
-import type { GamepadState } from "@/lib/gamepad";
+import { edgeConfirm, getPrimaryGamepad, pollAllGamepadSlots } from "@/lib/gamepad";
 
 const PROXIMITY = 5.5;
 
@@ -26,13 +25,13 @@ export function StorySceneLogic({
   onNearby,
   onInteract,
 }: StorySceneLogicProps) {
-  const stateRef = useRef<GamepadState | null>(null);
   const lastNearbyRef = useRef<string | null>(null);
-  const prevButtonRef = useRef(false);
+  const prevButtonsRef = useRef<boolean[]>([]);
+  const panelOpenRef = useRef(panelOpen);
+  const onInteractRef = useRef(onInteract);
 
-  useGamepad((s) => {
-    stateRef.current = s;
-  });
+  panelOpenRef.current = panelOpen;
+  onInteractRef.current = onInteract;
 
   useFrame(({ camera }) => {
     let nearest: string | null = null;
@@ -54,12 +53,17 @@ export function StorySceneLogic({
       onNearby(nearest);
     }
 
-    const s = stateRef.current;
-    const pressed = Boolean(s?.connected && s.buttons[0]);
-    if (!panelOpen && pressed && !prevButtonRef.current && nearest) {
-      onInteract(nearest);
+    const s = getPrimaryGamepad(pollAllGamepadSlots());
+    const prev = prevButtonsRef.current;
+    if (
+      s.connected &&
+      !panelOpenRef.current &&
+      edgeConfirm(s.buttons, prev) &&
+      nearest
+    ) {
+      onInteractRef.current(nearest);
     }
-    prevButtonRef.current = pressed;
+    prevButtonsRef.current = s.connected ? s.buttons.slice() : [];
   });
 
   return (

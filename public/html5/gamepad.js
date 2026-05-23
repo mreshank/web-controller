@@ -16,6 +16,10 @@
     return null;
   }
 
+  function readButton(b) {
+    return Boolean(b && (b.pressed || (b.value ?? 0) > 0.45));
+  }
+
   function readState() {
     const gp = primaryPad();
     if (!gp) return { connected: false };
@@ -29,7 +33,7 @@
       ry: apply(gp.axes[3] ?? 0),
       l2: gp.buttons[6]?.value ?? 0,
       r2: gp.buttons[7]?.value ?? 0,
-      buttons: Array.from(gp.buttons, (b) => b.pressed),
+      buttons: Array.from(gp.buttons, readButton),
     };
   }
 

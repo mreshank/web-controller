@@ -1,6 +1,7 @@
 "use client";
 
 import { SceneShell } from "@/components/shared/SceneShell";
+import { PortfolioPlayerProvider } from "@/portfolio/PortfolioPlayerContext";
 import { PortfolioSceneLogic } from "@/portfolio/PortfolioSceneLogic";
 
 type Props = {
@@ -9,18 +10,25 @@ type Props = {
   panelOpen: boolean;
   onNearby: (id: string | null) => void;
   onInteract: (id: string) => void;
+  onClosePanel: () => void;
+  registerInteract: (fn: (v: boolean) => void) => void;
 };
 
-export function PortfolioWorld(props: Props) {
+export function PortfolioWorld({
+  registerInteract,
+  ...props
+}: Props) {
   return (
     <div className="gp-canvas-wrap">
       <SceneShell
-        camera={{ position: [0, 1.72, 8], fov: 60 }}
+        camera={{ position: [0, 4, 12], fov: 55 }}
         showGrid={false}
         showStars={false}
         dpr={[1, 1.5]}
       >
-        <PortfolioSceneLogic {...props} />
+        <PortfolioPlayerProvider>
+          <PortfolioSceneLogic registerInteract={registerInteract} {...props} />
+        </PortfolioPlayerProvider>
       </SceneShell>
     </div>
   );

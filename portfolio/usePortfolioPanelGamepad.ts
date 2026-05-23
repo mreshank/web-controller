@@ -2,19 +2,30 @@
 
 import { useRef } from "react";
 import { useGamepad } from "@/hooks/useGamepad";
+import { edgeCancel, edgeConfirm } from "@/lib/gamepad";
 
-const CLOSE_BUTTON = 1;
-
+/** Panel: ○/B close; ×/□ also close. Ignores held buttons on open. */
 export function usePortfolioPanelGamepad(panelOpen: boolean, onClose: () => void) {
-  const prevCloseRef = useRef(false);
+  const prevButtonsRef = useRef<boolean[]>([]);
+  const armedRef = useRef(false);
 
   useGamepad((s) => {
     if (!panelOpen || !s.connected) {
-      prevCloseRef.current = false;
+      prevButtonsRef.current = [];
+      armedRef.current = false;
       return;
     }
-    const pressed = Boolean(s.buttons[CLOSE_BUTTON]);
-    if (pressed && !prevCloseRef.current) onClose();
-    prevCloseRef.current = pressed;
+
+    if (!armedRef.current) {
+      armedRef.current = true;
+      prevButtonsRef.current = s.buttons.slice();
+      return;
+    }
+
+    const prev = prevButtonsRef.current;
+    if (edgeCancel(s.buttons, prev) || edgeConfirm(s.buttons, prev)) {
+      onClose();
+    }
+    prevButtonsRef.current = s.buttons.slice();
   });
 }

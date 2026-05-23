@@ -2,20 +2,29 @@
 
 import { useRef } from "react";
 import { useGamepad } from "@/hooks/useGamepad";
-
-/** Standard mapping: buttons[1] = Circle (PS) / B (Xbox) — "O" close */
-const CLOSE_BUTTON_INDEX = 1;
+import { edgeCancel, edgeConfirm } from "@/lib/gamepad";
 
 export function useStoryPanelGamepad(panelOpen: boolean, onClose: () => void) {
-  const prevCloseRef = useRef(false);
+  const prevButtonsRef = useRef<boolean[]>([]);
+  const armedRef = useRef(false);
 
   useGamepad((s) => {
     if (!panelOpen || !s.connected) {
-      prevCloseRef.current = false;
+      prevButtonsRef.current = [];
+      armedRef.current = false;
       return;
     }
-    const pressed = Boolean(s.buttons[CLOSE_BUTTON_INDEX]);
-    if (pressed && !prevCloseRef.current) onClose();
-    prevCloseRef.current = pressed;
+
+    if (!armedRef.current) {
+      armedRef.current = true;
+      prevButtonsRef.current = s.buttons.slice();
+      return;
+    }
+
+    const prev = prevButtonsRef.current;
+    if (edgeCancel(s.buttons, prev) || edgeConfirm(s.buttons, prev)) {
+      onClose();
+    }
+    prevButtonsRef.current = s.buttons.slice();
   });
 }
