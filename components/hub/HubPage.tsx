@@ -6,6 +6,13 @@ import { HubPresenterTools } from "@/components/hub/HubPresenterTools";
 
 const EXPERIENCES = [
   {
+    href: "/portfolio",
+    title: "3D Portfolio Walk",
+    tag: "Eshank Tyagi",
+    desc: "Walk through my work as a story — bio, stack, projects, contact. Gamepad or keyboard.",
+    mod: "gp-card--portfolio",
+  },
+  {
     href: "/game",
     title: "Orb Rush",
     tag: "Finale",

@@ -29,6 +29,8 @@
   --gp-html5: #c8ff00;
   --gp-vanilla: #ff6b35;
   --gp-vanilla-dim: rgba(255, 107, 53, 0.12);
+  --gp-portfolio: #1eaedb;
+  --gp-portfolio-dim: rgba(30, 174, 219, 0.12);
   --gp-naive: #ff6b3d;
   --gp-font-display: "Syne", system-ui, sans-serif;
   --gp-font-body: "DM Sans", system-ui, sans-serif;
@@ -631,6 +633,24 @@
 
 .gp-hud--story .gp-hud__label {
   color: var(--gp-story);
+}
+
+.gp-hud--portfolio .gp-hud__label {
+  color: var(--gp-portfolio);
+}
+
+.gp-modal--portfolio {
+  border-color: rgba(30, 174, 219, 0.35);
+}
+
+.gp-card--portfolio::before {
+  background: linear-gradient(135deg, var(--gp-portfolio), #38bdf8);
+}
+.gp-card--portfolio:hover {
+  border-color: rgba(30, 174, 219, 0.45);
+}
+.gp-card--portfolio .gp-card__tag {
+  color: var(--gp-portfolio);
 }
 
 .gp-status--ok {

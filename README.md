@@ -18,6 +18,7 @@ Open [http://localhost:3000](http://localhost:3000) — the hub links to everyth
 | URL | Folder | What |
 |-----|--------|------|
 | `/` | `app/page.tsx` | Hub |
+| `/portfolio` | `portfolio/` | **3D walkable portfolio** — Eshank Tyagi story beacons |
 | `/demo` | `demo/` | 25-min talk: R3F cube, HUD, presenter tools |
 | `/game` | `game/` | **Orb Rush** — up to 4 controllers, 3D arena, orbs |
 | `/story` | `story/` | Fly through narrative beacons in **your order** |

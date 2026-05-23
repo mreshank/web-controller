@@ -15,6 +15,13 @@ const PUBLIC_STAGE_ROUTES = [
     keys: "Space next · P pause",
   },
   {
+    href: "/portfolio",
+    label: "3D Portfolio",
+    mod: "gp-stage-card--cyan",
+    desc: "Walk mreshank.com story in 3D.",
+    keys: "",
+  },
+  {
     href: "/game",
     label: "Orb Rush (finale)",
     mod: "gp-stage-card--fuchsia",
