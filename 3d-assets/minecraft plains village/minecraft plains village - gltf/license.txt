@@ -1,0 +1,8 @@
+Model Information:
+* title:	Minecraft Plains Village
+* source:	https://sketchfab.com/3d-models/minecraft-plains-village-d41dcdccaa6c4074a6f1c1f9282b77f8
+* author:	imsharky (https://sketchfab.com/imsharky)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works
